@@ -1,3 +1,4 @@
+/*
 // lib/data/sync/sync_queue_dao.dart
 import 'package:drift/drift.dart';
 import 'package:invoice_module/src/model/invoice_model.dart';
@@ -63,3 +64,4 @@ class InvoiceDao {
     )..where(($InvoicesTable   t) => t.id.isIn(ids))).go();
   }
 }
+*/

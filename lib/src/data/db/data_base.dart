@@ -3,14 +3,19 @@ import 'package:drift/native.dart'; // یا use SqliteExecutor for platform spec
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
-import '../../model/invoice_model.dart';
-import '../service/sync_queue_dao.dart';
+import '../service/invoice_dao.dart';
+import '../service/invoice_items_dao.dart';
+import '../service/payments_dao.dart';
+import '../table/invoice_items.dart';
 import '../table/invoices.dart';
+import '../table/invoices.drift.dart';
+import '../table/payments.dart';
+import 'data_base.drift.dart';
 
-part 'data_base.g.dart';
+import 'data_base.drift.dart';
 
-@DriftDatabase(tables: [Invoices], daos: [InvoiceDao])
-final class AppDatabase extends _$AppDatabase {
+@DriftDatabase(tables: [Invoices,InvoiceItems,Payments], daos: [InvoiceDao,InvoiceItemsDao,PaymentsDao])
+final class AppDatabase extends $AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   factory AppDatabase.open() {
@@ -29,10 +34,10 @@ final class AppDatabase extends _$AppDatabase {
     });
   }
 
-  @override
+
   int get schemaVersion => 2;
 
-  @override
+
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) async {
       await m.createAll();
@@ -45,76 +50,5 @@ final class AppDatabase extends _$AppDatabase {
     },
   );
 
-  @override
-  String $expandVar(int start, int amount) {
-    // TODO: implement $expandVar
-    throw UnimplementedError();
-  }
 
-  @override
-  GenerationContext $write(
-    Component component, {
-    bool? hasMultipleTables,
-    int? startIndex,
-  }) {
-    // TODO: implement $write
-    throw UnimplementedError();
-  }
-
-  @override
-  GenerationContext $writeInsertable(
-    TableInfo<Table, dynamic> table,
-    Insertable<dynamic> insertable, {
-    int? startIndex,
-  }) {
-    // TODO: implement $writeInsertable
-    throw UnimplementedError();
-  }
-
-  @override
-  T alias<T, D>(ResultSetImplementation<T, D> table, String alias) {
-    // TODO: implement alias
-    throw UnimplementedError();
-  }
-
-  @override
-  // TODO: implement allTables
-  Iterable<TableInfo<Table, dynamic>> get allTables =>
-      throw UnimplementedError();
-
-  // TODO: implement attachedDatabase
-  @override
-  GeneratedDatabase get attachedDatabase => throw UnimplementedError();
-
-  @override
-  Future<void> beforeOpen(QueryExecutor executor, OpeningDetails details) {
-    // TODO: implement beforeOpen
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> close() {
-    // TODO: implement close
-    throw UnimplementedError();
-  }
-
-  @override
-  // TODO: implement connection
-  DatabaseConnection get connection => throw UnimplementedError();
-
-  @override
-  Migrator createMigrator() {
-    // TODO: implement createMigrator
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<int> customInsert(
-    String query, {
-    List<Variable<Object>> variables = const [],
-    Set<ResultSetImplementation<dynamic, dynamic>>? updates,
-  }) {
-    // TODO: implement customInsert
-    throw UnimplementedError();
-  }
 }

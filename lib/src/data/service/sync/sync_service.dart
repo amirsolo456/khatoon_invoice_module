@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:invoice_module/src/data/table/invoices.dart';
 import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
-
+import 'package:offline_first_sync_drift_rest/offline_first_sync_drift_rest.dart';
 
 import '../../db/data_base.dart' show AppDatabase;
 
@@ -41,29 +42,35 @@ class SyncService extends ChangeNotifier {
     http.Client? httpClient,
     int maxRetries = 5,
     int maxPushRetries = 5,
-  })  : _db = db,
-        _baseUri = Uri.parse(baseUrl),
+  })  : _baseUri = Uri.parse(baseUrl),
         _httpClient = httpClient ?? http.Client() {
+
     final config = SyncConfig(
       conflictStrategy: ConflictStrategy.autoPreserve,
       pageSize: 500,
       maxPushRetries: maxPushRetries,
-    maxConflictRetries: 5,
-      // retryTransportErrorsInEngine: false,
+      maxConflictRetries: 5,
+ 
     );
-    _maxOutboxTryCount = config.maxConflictRetries;
 
+    _engine = createRestSyncEngine<AppDatabase>(
+      db: db,
+      base: _baseUri,
+      token: () async => '',
+      tables: [todoSync],
+      config: SyncConfig(),
+      client: _httpClient,
+      maxRetries: maxRetries,
+    );
 
   }
 
-  final AppDatabase _db;
   final Uri _baseUri;
   final http.Client _httpClient;
   final bool pushOnOutboxChanges;
   final bool pullOnStartup;
   final Duration? autoInterval;
   final Duration pushDebounce;
-  late final int _maxOutboxTryCount;
 
   late final SyncEngine<AppDatabase> _engine;
   // late final SyncCoordinator _coordinator;
@@ -139,43 +146,6 @@ class SyncService extends ChangeNotifier {
   //   return ops.length;
   // }
 
-  void _handleEvent(SyncEvent event) {
-    switch (event) {
-      case SyncStarted():
-        _status = SyncStatus.syncing;
-        _progress = 0.0;
-        notifyListeners();
-      case SyncProgress(:final done, :final total):
-        if (total > 0) {
-          _progress = done / total;
-          notifyListeners();
-        }
-      case SyncCompleted(:final stats):
-        _lastStats = stats;
-        _status = SyncStatus.idle;
-        _progress = 1.0;
-        notifyListeners();
-      case SyncErrorEvent(:final error  ):
-        _error = error.toString() ?? 'Sync failed';
-        _status = SyncStatus.error;
-        notifyListeners();
-      case OperationFailedEvent(:final error ):
-        if (_error == null) {
-          _error = error .toString() ?? 'Operation failed';
-          _status = SyncStatus.error;
-          notifyListeners();
-        }
-      case PullPage ():
-      // case PushBatchProcessedEvent():
-        if (kDebugMode) {
-          debugPrint('SyncEvent: $event');
-        }
-      default:
-        if (kDebugMode) {
-          debugPrint('SyncEvent: $event');
-        }
-    }
-  }
 
   @override
   void dispose() {
@@ -191,4 +161,45 @@ enum SyncStatus {
   idle,
   syncing,
   error,
+}
+
+
+
+/// One-liner helper that creates [RestTransport] and [SyncEngine] together.
+SyncEngine<DB> createRestSyncEngine<DB extends GeneratedDatabase>({
+  required DB db,
+  required Uri base,
+  required AuthTokenProvider token,
+  required List<SyncableTable<dynamic>> tables,
+  SyncConfig config = const SyncConfig(),
+  Map<String, TableConflictConfig>? tableConflictConfigs,
+  http.Client? client,
+  Duration backoffMin = const Duration(seconds: 1),
+  Duration backoffMax = const Duration(minutes: 2),
+  int maxRetries = 5,
+  int pushConcurrency = 1,
+  bool enableBatch = false,
+  int batchSize = 100,
+  String batchPath = 'batch',
+}) {
+  final transport = RestTransport(
+    base: base,
+    token: token,
+    client: client,
+    backoffMin: backoffMin,
+    backoffMax: backoffMax,
+    maxRetries: maxRetries,
+    pushConcurrency: pushConcurrency,
+    enableBatch: enableBatch,
+    batchSize: batchSize,
+    batchPath: batchPath,
+  );
+
+  return SyncEngine<DB>(
+    db: db,
+    transport: transport,
+    tables: tables,
+    config: config,
+    tableConflictConfigs: tableConflictConfigs,
+  );
 }

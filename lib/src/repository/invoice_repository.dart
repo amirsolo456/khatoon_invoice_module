@@ -1,3 +1,4 @@
+/*
 import 'package:drift/drift.dart';
 import 'package:khatoon_shared/index.dart';
 import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
@@ -91,7 +92,7 @@ class InvoiceModelRepository {
     await _writer.replaceAndEnqueue(
       updated,
 
-      changedFields: .new(),
+      // changedFields:  Value(DateTime.now().microsecond).value,
       baseUpdatedAt: invoiceModel.updatedAt,
       localTimestamp: now,
     );
@@ -149,3 +150,4 @@ class InvoiceModelRepository {
     return invoiceModelWithTime;
   }
 }
+*/

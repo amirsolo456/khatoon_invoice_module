@@ -1,16 +1,16 @@
-/*
+import 'package:invoice_module/index.dart';
 import 'package:invoice_module/src/data/table/invoices.dart';
-import 'package:invoice_module/src/model/invoice_model.dart';
-import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
+import 'package:invoice_module/src/data/table/invoices.drift.dart';
+import 'package:invoice_module/src/syncable_table.dart' as sync;
 
 import '../../db/data_base.dart';
 
-SyncableTable<InvoiceModel> todoSyncTable(AppDatabase db) => SyncableTable<InvoiceModel>(table:  (db.allTables[InvoiceModel()]).,
-  kind: 'todos',
-  // table: db.INV,
+
+
+sync.SyncableTable<InvoiceModel> invoiceSyncTable(AppDatabase db) => db.invoices.syncTable  (
   fromJson: InvoiceModel.fromJson,
   toJson: (t) => t.toJson(),
-  // toInsertable: (t) => t.toInsertable(),
-  // getId: (t) => t.id,
+  toInsertable: (t) => t.toInsertable(),
+  getId: (t) => t.id.toString(),
   getUpdatedAt: (t) => t.updatedAt,
-);*/
+);
