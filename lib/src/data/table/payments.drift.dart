@@ -9,11 +9,8 @@ import 'package:drift/internal/modular.dart' as i5;
 
 typedef $$PaymentsTableCreateCompanionBuilder = i2.PaymentsCompanion Function({
   required DateTime updatedAt,
-  required DateTime createdAt,
   i0.Value<DateTime?> deletedAt,
   i0.Value<DateTime?> deletedAtLocal,
-  required double version,
-  required bool isDeleted,
   i0.Value<int> id,
   required int invoiceId,
   required double amount,
@@ -26,11 +23,8 @@ typedef $$PaymentsTableCreateCompanionBuilder = i2.PaymentsCompanion Function({
 });
 typedef $$PaymentsTableUpdateCompanionBuilder = i2.PaymentsCompanion Function({
   i0.Value<DateTime> updatedAt,
-  i0.Value<DateTime> createdAt,
   i0.Value<DateTime?> deletedAt,
   i0.Value<DateTime?> deletedAtLocal,
-  i0.Value<double> version,
-  i0.Value<bool> isDeleted,
   i0.Value<int> id,
   i0.Value<int> invoiceId,
   i0.Value<double> amount,
@@ -82,11 +76,9 @@ class $$PaymentsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+
   i0.ColumnFilters<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => i0.ColumnFilters(column));
-
-  i0.ColumnFilters<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => i0.ColumnFilters(column));
 
   i0.ColumnFilters<DateTime> get deletedAt => $composableBuilder(
       column: $table.deletedAt, builder: (column) => i0.ColumnFilters(column));
@@ -94,12 +86,6 @@ class $$PaymentsTableFilterComposer
   i0.ColumnFilters<DateTime> get deletedAtLocal => $composableBuilder(
       column: $table.deletedAtLocal,
       builder: (column) => i0.ColumnFilters(column));
-
-  i0.ColumnFilters<double> get version => $composableBuilder(
-      column: $table.version, builder: (column) => i0.ColumnFilters(column));
-
-  i0.ColumnFilters<bool> get isDeleted => $composableBuilder(
-      column: $table.isDeleted, builder: (column) => i0.ColumnFilters(column));
 
   i0.ColumnFilters<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => i0.ColumnFilters(column));
@@ -159,12 +145,9 @@ class $$PaymentsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+
   i0.ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt,
-      builder: (column) => i0.ColumnOrderings(column));
-
-  i0.ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt,
       builder: (column) => i0.ColumnOrderings(column));
 
   i0.ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
@@ -173,13 +156,6 @@ class $$PaymentsTableOrderingComposer
 
   i0.ColumnOrderings<DateTime> get deletedAtLocal => $composableBuilder(
       column: $table.deletedAtLocal,
-      builder: (column) => i0.ColumnOrderings(column));
-
-  i0.ColumnOrderings<double> get version => $composableBuilder(
-      column: $table.version, builder: (column) => i0.ColumnOrderings(column));
-
-  i0.ColumnOrderings<bool> get isDeleted => $composableBuilder(
-      column: $table.isDeleted,
       builder: (column) => i0.ColumnOrderings(column));
 
   i0.ColumnOrderings<int> get id => $composableBuilder(
@@ -243,23 +219,15 @@ class $$PaymentsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+
   i0.GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  i0.GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   i0.GeneratedColumn<DateTime> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   i0.GeneratedColumn<DateTime> get deletedAtLocal => $composableBuilder(
       column: $table.deletedAtLocal, builder: (column) => column);
-
-  i0.GeneratedColumn<double> get version =>
-      $composableBuilder(column: $table.version, builder: (column) => column);
-
-  i0.GeneratedColumn<bool> get isDeleted =>
-      $composableBuilder(column: $table.isDeleted, builder: (column) => column);
 
   i0.GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
@@ -332,11 +300,8 @@ class $$PaymentsTableTableManager extends i0.RootTableManager<
               i2.$$PaymentsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             i0.Value<DateTime> updatedAt = const i0.Value.absent(),
-            i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<DateTime?> deletedAt = const i0.Value.absent(),
             i0.Value<DateTime?> deletedAtLocal = const i0.Value.absent(),
-            i0.Value<double> version = const i0.Value.absent(),
-            i0.Value<bool> isDeleted = const i0.Value.absent(),
             i0.Value<int> id = const i0.Value.absent(),
             i0.Value<int> invoiceId = const i0.Value.absent(),
             i0.Value<double> amount = const i0.Value.absent(),
@@ -349,11 +314,8 @@ class $$PaymentsTableTableManager extends i0.RootTableManager<
           }) =>
               i2.PaymentsCompanion(
             updatedAt: updatedAt,
-            createdAt: createdAt,
             deletedAt: deletedAt,
             deletedAtLocal: deletedAtLocal,
-            version: version,
-            isDeleted: isDeleted,
             id: id,
             invoiceId: invoiceId,
             amount: amount,
@@ -366,11 +328,8 @@ class $$PaymentsTableTableManager extends i0.RootTableManager<
           ),
           createCompanionCallback: ({
             required DateTime updatedAt,
-            required DateTime createdAt,
             i0.Value<DateTime?> deletedAt = const i0.Value.absent(),
             i0.Value<DateTime?> deletedAtLocal = const i0.Value.absent(),
-            required double version,
-            required bool isDeleted,
             i0.Value<int> id = const i0.Value.absent(),
             required int invoiceId,
             required double amount,
@@ -383,11 +342,8 @@ class $$PaymentsTableTableManager extends i0.RootTableManager<
           }) =>
               i2.PaymentsCompanion.insert(
             updatedAt: updatedAt,
-            createdAt: createdAt,
             deletedAt: deletedAt,
             deletedAtLocal: deletedAtLocal,
-            version: version,
-            isDeleted: isDeleted,
             id: id,
             invoiceId: invoiceId,
             amount: amount,
@@ -460,18 +416,14 @@ class $PaymentsTable extends i3.Payments
   @override
   final i0.GeneratedDatabase attachedDatabase;
   final String? _alias;
+
   $PaymentsTable(this.attachedDatabase, [this._alias]);
+
   static const i0.VerificationMeta _updatedAtMeta =
       const i0.VerificationMeta('updatedAt');
   @override
   late final i0.GeneratedColumn<DateTime> updatedAt =
       i0.GeneratedColumn<DateTime>('updated_at', aliasedName, false,
-          type: i0.DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const i0.VerificationMeta _createdAtMeta =
-      const i0.VerificationMeta('createdAt');
-  @override
-  late final i0.GeneratedColumn<DateTime> createdAt =
-      i0.GeneratedColumn<DateTime>('created_at', aliasedName, false,
           type: i0.DriftSqlType.dateTime, requiredDuringInsert: true);
   static const i0.VerificationMeta _deletedAtMeta =
       const i0.VerificationMeta('deletedAt');
@@ -485,21 +437,6 @@ class $PaymentsTable extends i3.Payments
   late final i0.GeneratedColumn<DateTime> deletedAtLocal =
       i0.GeneratedColumn<DateTime>('deleted_at_local', aliasedName, true,
           type: i0.DriftSqlType.dateTime, requiredDuringInsert: false);
-  static const i0.VerificationMeta _versionMeta =
-      const i0.VerificationMeta('version');
-  @override
-  late final i0.GeneratedColumn<double> version = i0.GeneratedColumn<double>(
-      'version', aliasedName, false,
-      type: i0.DriftSqlType.double, requiredDuringInsert: true);
-  static const i0.VerificationMeta _isDeletedMeta =
-      const i0.VerificationMeta('isDeleted');
-  @override
-  late final i0.GeneratedColumn<bool> isDeleted = i0.GeneratedColumn<bool>(
-      'is_deleted', aliasedName, false,
-      type: i0.DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints: i0.GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_deleted" IN (0, 1))'));
   static const i0.VerificationMeta _idMeta = const i0.VerificationMeta('id');
   @override
   late final i0.GeneratedColumn<int> id = i0.GeneratedColumn<int>(
@@ -556,14 +493,12 @@ class $PaymentsTable extends i3.Payments
   late final i0.GeneratedColumn<String> notes = i0.GeneratedColumn<String>(
       'notes', aliasedName, true,
       type: i0.DriftSqlType.string, requiredDuringInsert: false);
+
   @override
   List<i0.GeneratedColumn> get $columns => [
         updatedAt,
-        createdAt,
         deletedAt,
         deletedAtLocal,
-        version,
-        isDeleted,
         id,
         invoiceId,
         amount,
@@ -574,11 +509,14 @@ class $PaymentsTable extends i3.Payments
         reference,
         notes
       ];
+
   @override
   String get aliasedName => _alias ?? actualTableName;
+
   @override
   String get actualTableName => $name;
   static const String $name = 'payments';
+
   @override
   i0.VerificationContext validateIntegrity(
       i0.Insertable<i1.PaymentsModel> instance,
@@ -591,12 +529,6 @@ class $PaymentsTable extends i3.Payments
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
     }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
     if (data.containsKey('deleted_at')) {
       context.handle(_deletedAtMeta,
           deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta));
@@ -606,18 +538,6 @@ class $PaymentsTable extends i3.Payments
           _deletedAtLocalMeta,
           deletedAtLocal.isAcceptableOrUnknown(
               data['deleted_at_local']!, _deletedAtLocalMeta));
-    }
-    if (data.containsKey('version')) {
-      context.handle(_versionMeta,
-          version.isAcceptableOrUnknown(data['version']!, _versionMeta));
-    } else if (isInserting) {
-      context.missing(_versionMeta);
-    }
-    if (data.containsKey('is_deleted')) {
-      context.handle(_isDeletedMeta,
-          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
-    } else if (isInserting) {
-      context.missing(_isDeletedMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -671,6 +591,7 @@ class $PaymentsTable extends i3.Payments
 
   @override
   Set<i0.GeneratedColumn> get $primaryKey => {id};
+
   @override
   i1.PaymentsModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -691,18 +612,15 @@ class $PaymentsTable extends i3.Payments
           .read(i0.DriftSqlType.string, data['${effectivePrefix}reference']),
       notes: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.string, data['${effectivePrefix}notes']),
-      version: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.double, data['${effectivePrefix}version'])!,
-      isDeleted: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.bool, data['${effectivePrefix}is_deleted'])!,
-      createdAt: attachedDatabase.typeMapping.read(
-          i0.DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       updatedAt: attachedDatabase.typeMapping.read(
           i0.DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
       deletedAt: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.dateTime, data['${effectivePrefix}deleted_at']),
       deletedAtLocal: attachedDatabase.typeMapping.read(
           i0.DriftSqlType.dateTime, data['${effectivePrefix}deleted_at_local']),
+
+      isDeleted: false,
+      createdAt: DateTime.now(),
     );
   }
 
@@ -714,11 +632,8 @@ class $PaymentsTable extends i3.Payments
 
 class PaymentsCompanion extends i0.UpdateCompanion<i1.PaymentsModel> {
   final i0.Value<DateTime> updatedAt;
-  final i0.Value<DateTime> createdAt;
   final i0.Value<DateTime?> deletedAt;
   final i0.Value<DateTime?> deletedAtLocal;
-  final i0.Value<double> version;
-  final i0.Value<bool> isDeleted;
   final i0.Value<int> id;
   final i0.Value<int> invoiceId;
   final i0.Value<double> amount;
@@ -728,13 +643,11 @@ class PaymentsCompanion extends i0.UpdateCompanion<i1.PaymentsModel> {
   final i0.Value<int?> toPartyId;
   final i0.Value<String?> reference;
   final i0.Value<String?> notes;
+
   const PaymentsCompanion({
     this.updatedAt = const i0.Value.absent(),
-    this.createdAt = const i0.Value.absent(),
     this.deletedAt = const i0.Value.absent(),
     this.deletedAtLocal = const i0.Value.absent(),
-    this.version = const i0.Value.absent(),
-    this.isDeleted = const i0.Value.absent(),
     this.id = const i0.Value.absent(),
     this.invoiceId = const i0.Value.absent(),
     this.amount = const i0.Value.absent(),
@@ -745,13 +658,11 @@ class PaymentsCompanion extends i0.UpdateCompanion<i1.PaymentsModel> {
     this.reference = const i0.Value.absent(),
     this.notes = const i0.Value.absent(),
   });
+
   PaymentsCompanion.insert({
     required DateTime updatedAt,
-    required DateTime createdAt,
     this.deletedAt = const i0.Value.absent(),
     this.deletedAtLocal = const i0.Value.absent(),
-    required double version,
-    required bool isDeleted,
     this.id = const i0.Value.absent(),
     required int invoiceId,
     required double amount,
@@ -762,19 +673,14 @@ class PaymentsCompanion extends i0.UpdateCompanion<i1.PaymentsModel> {
     this.reference = const i0.Value.absent(),
     this.notes = const i0.Value.absent(),
   })  : updatedAt = i0.Value(updatedAt),
-        createdAt = i0.Value(createdAt),
-        version = i0.Value(version),
-        isDeleted = i0.Value(isDeleted),
         invoiceId = i0.Value(invoiceId),
         amount = i0.Value(amount),
         direction = i0.Value(direction);
+
   static i0.Insertable<i1.PaymentsModel> custom({
     i0.Expression<DateTime>? updatedAt,
-    i0.Expression<DateTime>? createdAt,
     i0.Expression<DateTime>? deletedAt,
     i0.Expression<DateTime>? deletedAtLocal,
-    i0.Expression<double>? version,
-    i0.Expression<bool>? isDeleted,
     i0.Expression<int>? id,
     i0.Expression<int>? invoiceId,
     i0.Expression<double>? amount,
@@ -787,11 +693,8 @@ class PaymentsCompanion extends i0.UpdateCompanion<i1.PaymentsModel> {
   }) {
     return i0.RawValuesInsertable({
       if (updatedAt != null) 'updated_at': updatedAt,
-      if (createdAt != null) 'created_at': createdAt,
       if (deletedAt != null) 'deleted_at': deletedAt,
       if (deletedAtLocal != null) 'deleted_at_local': deletedAtLocal,
-      if (version != null) 'version': version,
-      if (isDeleted != null) 'is_deleted': isDeleted,
       if (id != null) 'id': id,
       if (invoiceId != null) 'invoice_id': invoiceId,
       if (amount != null) 'amount': amount,
@@ -806,11 +709,8 @@ class PaymentsCompanion extends i0.UpdateCompanion<i1.PaymentsModel> {
 
   i2.PaymentsCompanion copyWith(
       {i0.Value<DateTime>? updatedAt,
-      i0.Value<DateTime>? createdAt,
       i0.Value<DateTime?>? deletedAt,
       i0.Value<DateTime?>? deletedAtLocal,
-      i0.Value<double>? version,
-      i0.Value<bool>? isDeleted,
       i0.Value<int>? id,
       i0.Value<int>? invoiceId,
       i0.Value<double>? amount,
@@ -822,11 +722,8 @@ class PaymentsCompanion extends i0.UpdateCompanion<i1.PaymentsModel> {
       i0.Value<String?>? notes}) {
     return i2.PaymentsCompanion(
       updatedAt: updatedAt ?? this.updatedAt,
-      createdAt: createdAt ?? this.createdAt,
       deletedAt: deletedAt ?? this.deletedAt,
       deletedAtLocal: deletedAtLocal ?? this.deletedAtLocal,
-      version: version ?? this.version,
-      isDeleted: isDeleted ?? this.isDeleted,
       id: id ?? this.id,
       invoiceId: invoiceId ?? this.invoiceId,
       amount: amount ?? this.amount,
@@ -845,20 +742,11 @@ class PaymentsCompanion extends i0.UpdateCompanion<i1.PaymentsModel> {
     if (updatedAt.present) {
       map['updated_at'] = i0.Variable<DateTime>(updatedAt.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = i0.Variable<DateTime>(createdAt.value);
-    }
     if (deletedAt.present) {
       map['deleted_at'] = i0.Variable<DateTime>(deletedAt.value);
     }
     if (deletedAtLocal.present) {
       map['deleted_at_local'] = i0.Variable<DateTime>(deletedAtLocal.value);
-    }
-    if (version.present) {
-      map['version'] = i0.Variable<double>(version.value);
-    }
-    if (isDeleted.present) {
-      map['is_deleted'] = i0.Variable<bool>(isDeleted.value);
     }
     if (id.present) {
       map['id'] = i0.Variable<int>(id.value);
@@ -894,11 +782,8 @@ class PaymentsCompanion extends i0.UpdateCompanion<i1.PaymentsModel> {
   String toString() {
     return (StringBuffer('PaymentsCompanion(')
           ..write('updatedAt: $updatedAt, ')
-          ..write('createdAt: $createdAt, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('deletedAtLocal: $deletedAtLocal, ')
-          ..write('version: $version, ')
-          ..write('isDeleted: $isDeleted, ')
           ..write('id: $id, ')
           ..write('invoiceId: $invoiceId, ')
           ..write('amount: $amount, ')
@@ -915,16 +800,15 @@ class PaymentsCompanion extends i0.UpdateCompanion<i1.PaymentsModel> {
 
 class _$PaymentsModelInsertable implements i0.Insertable<i1.PaymentsModel> {
   i1.PaymentsModel _object;
+
   _$PaymentsModelInsertable(this._object);
+
   @override
   Map<String, i0.Expression> toColumns(bool nullToAbsent) {
     return i2.PaymentsCompanion(
       updatedAt: i0.Value(_object.updatedAt),
-      createdAt: i0.Value(_object.createdAt),
       deletedAt: i0.Value(_object.deletedAt),
       deletedAtLocal: i0.Value(_object.deletedAtLocal),
-      version: i0.Value(_object.version),
-      isDeleted: i0.Value(_object.isDeleted),
       id: i0.Value(_object.id),
       amount: i0.Value(_object.amount),
       direction: i0.Value(_object.direction),

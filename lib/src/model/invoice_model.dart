@@ -1,5 +1,3 @@
-﻿import 'package:invoice_module/src/model/invoice_items_model.dart';
-import 'package:invoice_module/src/model/payments_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:khatoon_shared/index.dart'; // شامل کلاس Invoice
 
@@ -11,32 +9,24 @@ class InvoiceModel extends Invoice {
   final List<InvoiceLine> items; // استفاده از کلاس Drift
   final List<Payment> payments; // استفاده از کلاس Drift
   InvoiceModel({
-    required super.id,
-    required super.invoiceNo,
-    required super.type,
-    required super.totalAmount,
-    required super.status,
-    required super.version,
-    required super.isDeleted,
-    required super.createdAt,
-    required super.updatedAt,
     super.partyId,
     this.completed = false,
     required this.items,
     required this.payments,
-  });
+  }) : super(
+          id: 0,
+          invoiceNo: '0',
+          type: '',
+          totalAmount: 0,
+          status: '',
+
+          isDeleted: false,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
 
   factory InvoiceModel.empty() {
     return InvoiceModel(
-      id: 0,
-      invoiceNo: '',
-      type: '',
-      totalAmount: 0,
-      status: '',
-      version: 0,
-      isDeleted: false,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
       items: [],
       payments: [],
       completed: false,
@@ -57,16 +47,6 @@ class InvoiceModel extends Invoice {
     bool? completed,
   }) {
     return InvoiceModel(
-      id: id ?? this.id,
-      invoiceNo: invoiceNo ?? this.invoiceNo,
-      type: type ?? this.type,
-      totalAmount: totalAmount ?? this.totalAmount,
-      status: status ?? this.status,
-      version: version ?? this.version,
-      isDeleted: isDeleted ?? this.isDeleted,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      completed: completed ?? this.completed,
       items: [],
       payments: [],
     );
@@ -86,7 +66,7 @@ class InvoiceModel extends Invoice {
         other.type == type &&
         other.totalAmount == totalAmount &&
         other.status == status &&
-        other.version == version &&
+
         other.isDeleted == isDeleted &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
@@ -100,7 +80,7 @@ class InvoiceModel extends Invoice {
         type,
         totalAmount,
         status,
-        version,
+
         isDeleted,
         createdAt,
         updatedAt,

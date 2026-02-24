@@ -2,7 +2,6 @@ import 'package:drift/drift.dart';
 import 'package:invoice_module/src/model/payments_model.dart';
 import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
 
-import 'package:drift/drift.dart';
 
 import 'invoices.dart';
 

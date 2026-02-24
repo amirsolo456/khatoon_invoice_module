@@ -8,11 +8,8 @@ import 'package:drift/src/runtime/query_builder/query_builder.dart' as i4;
 
 typedef $$InvoicesTableCreateCompanionBuilder = i2.InvoicesCompanion Function({
   required DateTime updatedAt,
-  required DateTime createdAt,
   i0.Value<DateTime?> deletedAt,
   i0.Value<DateTime?> deletedAtLocal,
-  required double version,
-  required bool isDeleted,
   i0.Value<int> id,
   required String title,
   i0.Value<String?> description,
@@ -24,14 +21,14 @@ typedef $$InvoicesTableCreateCompanionBuilder = i2.InvoicesCompanion Function({
   i0.Value<int?> partyId,
   required double totalAmount,
   required String status,
+  required double version,
+  required bool isDeleted,
+  required DateTime createdAt,
 });
 typedef $$InvoicesTableUpdateCompanionBuilder = i2.InvoicesCompanion Function({
   i0.Value<DateTime> updatedAt,
-  i0.Value<DateTime> createdAt,
   i0.Value<DateTime?> deletedAt,
   i0.Value<DateTime?> deletedAtLocal,
-  i0.Value<double> version,
-  i0.Value<bool> isDeleted,
   i0.Value<int> id,
   i0.Value<String> title,
   i0.Value<String?> description,
@@ -43,6 +40,9 @@ typedef $$InvoicesTableUpdateCompanionBuilder = i2.InvoicesCompanion Function({
   i0.Value<int?> partyId,
   i0.Value<double> totalAmount,
   i0.Value<String> status,
+  i0.Value<double> version,
+  i0.Value<bool> isDeleted,
+  i0.Value<DateTime> createdAt,
 });
 
 class $$InvoicesTableFilterComposer
@@ -54,11 +54,9 @@ class $$InvoicesTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+
   i0.ColumnFilters<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => i0.ColumnFilters(column));
-
-  i0.ColumnFilters<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => i0.ColumnFilters(column));
 
   i0.ColumnFilters<DateTime> get deletedAt => $composableBuilder(
       column: $table.deletedAt, builder: (column) => i0.ColumnFilters(column));
@@ -66,12 +64,6 @@ class $$InvoicesTableFilterComposer
   i0.ColumnFilters<DateTime> get deletedAtLocal => $composableBuilder(
       column: $table.deletedAtLocal,
       builder: (column) => i0.ColumnFilters(column));
-
-  i0.ColumnFilters<double> get version => $composableBuilder(
-      column: $table.version, builder: (column) => i0.ColumnFilters(column));
-
-  i0.ColumnFilters<bool> get isDeleted => $composableBuilder(
-      column: $table.isDeleted, builder: (column) => i0.ColumnFilters(column));
 
   i0.ColumnFilters<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => i0.ColumnFilters(column));
@@ -107,6 +99,15 @@ class $$InvoicesTableFilterComposer
 
   i0.ColumnFilters<String> get status => $composableBuilder(
       column: $table.status, builder: (column) => i0.ColumnFilters(column));
+
+  i0.ColumnFilters<double> get version => $composableBuilder(
+      column: $table.version, builder: (column) => i0.ColumnFilters(column));
+
+  i0.ColumnFilters<bool> get isDeleted => $composableBuilder(
+      column: $table.isDeleted, builder: (column) => i0.ColumnFilters(column));
+
+  i0.ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => i0.ColumnFilters(column));
 }
 
 class $$InvoicesTableOrderingComposer
@@ -118,12 +119,9 @@ class $$InvoicesTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+
   i0.ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt,
-      builder: (column) => i0.ColumnOrderings(column));
-
-  i0.ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt,
       builder: (column) => i0.ColumnOrderings(column));
 
   i0.ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
@@ -132,13 +130,6 @@ class $$InvoicesTableOrderingComposer
 
   i0.ColumnOrderings<DateTime> get deletedAtLocal => $composableBuilder(
       column: $table.deletedAtLocal,
-      builder: (column) => i0.ColumnOrderings(column));
-
-  i0.ColumnOrderings<double> get version => $composableBuilder(
-      column: $table.version, builder: (column) => i0.ColumnOrderings(column));
-
-  i0.ColumnOrderings<bool> get isDeleted => $composableBuilder(
-      column: $table.isDeleted,
       builder: (column) => i0.ColumnOrderings(column));
 
   i0.ColumnOrderings<int> get id => $composableBuilder(
@@ -177,6 +168,17 @@ class $$InvoicesTableOrderingComposer
 
   i0.ColumnOrderings<String> get status => $composableBuilder(
       column: $table.status, builder: (column) => i0.ColumnOrderings(column));
+
+  i0.ColumnOrderings<double> get version => $composableBuilder(
+      column: $table.version, builder: (column) => i0.ColumnOrderings(column));
+
+  i0.ColumnOrderings<bool> get isDeleted => $composableBuilder(
+      column: $table.isDeleted,
+      builder: (column) => i0.ColumnOrderings(column));
+
+  i0.ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt,
+      builder: (column) => i0.ColumnOrderings(column));
 }
 
 class $$InvoicesTableAnnotationComposer
@@ -188,23 +190,15 @@ class $$InvoicesTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+
   i0.GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  i0.GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   i0.GeneratedColumn<DateTime> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   i0.GeneratedColumn<DateTime> get deletedAtLocal => $composableBuilder(
       column: $table.deletedAtLocal, builder: (column) => column);
-
-  i0.GeneratedColumn<double> get version =>
-      $composableBuilder(column: $table.version, builder: (column) => column);
-
-  i0.GeneratedColumn<bool> get isDeleted =>
-      $composableBuilder(column: $table.isDeleted, builder: (column) => column);
 
   i0.GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
@@ -238,6 +232,15 @@ class $$InvoicesTableAnnotationComposer
 
   i0.GeneratedColumn<String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
+
+  i0.GeneratedColumn<double> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  i0.GeneratedColumn<bool> get isDeleted =>
+      $composableBuilder(column: $table.isDeleted, builder: (column) => column);
+
+  i0.GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
 class $$InvoicesTableTableManager extends i0.RootTableManager<
@@ -268,11 +271,8 @@ class $$InvoicesTableTableManager extends i0.RootTableManager<
               i2.$$InvoicesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             i0.Value<DateTime> updatedAt = const i0.Value.absent(),
-            i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<DateTime?> deletedAt = const i0.Value.absent(),
             i0.Value<DateTime?> deletedAtLocal = const i0.Value.absent(),
-            i0.Value<double> version = const i0.Value.absent(),
-            i0.Value<bool> isDeleted = const i0.Value.absent(),
             i0.Value<int> id = const i0.Value.absent(),
             i0.Value<String> title = const i0.Value.absent(),
             i0.Value<String?> description = const i0.Value.absent(),
@@ -284,14 +284,14 @@ class $$InvoicesTableTableManager extends i0.RootTableManager<
             i0.Value<int?> partyId = const i0.Value.absent(),
             i0.Value<double> totalAmount = const i0.Value.absent(),
             i0.Value<String> status = const i0.Value.absent(),
+            i0.Value<double> version = const i0.Value.absent(),
+            i0.Value<bool> isDeleted = const i0.Value.absent(),
+            i0.Value<DateTime> createdAt = const i0.Value.absent(),
           }) =>
               i2.InvoicesCompanion(
             updatedAt: updatedAt,
-            createdAt: createdAt,
             deletedAt: deletedAt,
             deletedAtLocal: deletedAtLocal,
-            version: version,
-            isDeleted: isDeleted,
             id: id,
             title: title,
             description: description,
@@ -303,14 +303,14 @@ class $$InvoicesTableTableManager extends i0.RootTableManager<
             partyId: partyId,
             totalAmount: totalAmount,
             status: status,
+            version: version,
+            isDeleted: isDeleted,
+            createdAt: createdAt,
           ),
           createCompanionCallback: ({
             required DateTime updatedAt,
-            required DateTime createdAt,
             i0.Value<DateTime?> deletedAt = const i0.Value.absent(),
             i0.Value<DateTime?> deletedAtLocal = const i0.Value.absent(),
-            required double version,
-            required bool isDeleted,
             i0.Value<int> id = const i0.Value.absent(),
             required String title,
             i0.Value<String?> description = const i0.Value.absent(),
@@ -322,14 +322,14 @@ class $$InvoicesTableTableManager extends i0.RootTableManager<
             i0.Value<int?> partyId = const i0.Value.absent(),
             required double totalAmount,
             required String status,
+            required double version,
+            required bool isDeleted,
+            required DateTime createdAt,
           }) =>
               i2.InvoicesCompanion.insert(
             updatedAt: updatedAt,
-            createdAt: createdAt,
             deletedAt: deletedAt,
             deletedAtLocal: deletedAtLocal,
-            version: version,
-            isDeleted: isDeleted,
             id: id,
             title: title,
             description: description,
@@ -341,6 +341,9 @@ class $$InvoicesTableTableManager extends i0.RootTableManager<
             partyId: partyId,
             totalAmount: totalAmount,
             status: status,
+            version: version,
+            isDeleted: isDeleted,
+            createdAt: createdAt,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), i0.BaseReferences(db, table, e)))
@@ -371,18 +374,14 @@ class $InvoicesTable extends i3.Invoices
   @override
   final i0.GeneratedDatabase attachedDatabase;
   final String? _alias;
+
   $InvoicesTable(this.attachedDatabase, [this._alias]);
+
   static const i0.VerificationMeta _updatedAtMeta =
       const i0.VerificationMeta('updatedAt');
   @override
   late final i0.GeneratedColumn<DateTime> updatedAt =
       i0.GeneratedColumn<DateTime>('updated_at', aliasedName, false,
-          type: i0.DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const i0.VerificationMeta _createdAtMeta =
-      const i0.VerificationMeta('createdAt');
-  @override
-  late final i0.GeneratedColumn<DateTime> createdAt =
-      i0.GeneratedColumn<DateTime>('created_at', aliasedName, false,
           type: i0.DriftSqlType.dateTime, requiredDuringInsert: true);
   static const i0.VerificationMeta _deletedAtMeta =
       const i0.VerificationMeta('deletedAt');
@@ -396,26 +395,15 @@ class $InvoicesTable extends i3.Invoices
   late final i0.GeneratedColumn<DateTime> deletedAtLocal =
       i0.GeneratedColumn<DateTime>('deleted_at_local', aliasedName, true,
           type: i0.DriftSqlType.dateTime, requiredDuringInsert: false);
-  static const i0.VerificationMeta _versionMeta =
-      const i0.VerificationMeta('version');
-  @override
-  late final i0.GeneratedColumn<double> version = i0.GeneratedColumn<double>(
-      'version', aliasedName, false,
-      type: i0.DriftSqlType.double, requiredDuringInsert: true);
-  static const i0.VerificationMeta _isDeletedMeta =
-      const i0.VerificationMeta('isDeleted');
-  @override
-  late final i0.GeneratedColumn<bool> isDeleted = i0.GeneratedColumn<bool>(
-      'is_deleted', aliasedName, false,
-      type: i0.DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints: i0.GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_deleted" IN (0, 1))'));
   static const i0.VerificationMeta _idMeta = const i0.VerificationMeta('id');
   @override
   late final i0.GeneratedColumn<int> id = i0.GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: i0.DriftSqlType.int, requiredDuringInsert: false);
+      hasAutoIncrement: true,
+      type: i0.DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          i0.GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   static const i0.VerificationMeta _titleMeta =
       const i0.VerificationMeta('title');
   @override
@@ -485,14 +473,33 @@ class $InvoicesTable extends i3.Invoices
   late final i0.GeneratedColumn<String> status = i0.GeneratedColumn<String>(
       'status', aliasedName, false,
       type: i0.DriftSqlType.string, requiredDuringInsert: true);
+  static const i0.VerificationMeta _versionMeta =
+      const i0.VerificationMeta('version');
+  @override
+  late final i0.GeneratedColumn<double> version = i0.GeneratedColumn<double>(
+      'version', aliasedName, false,
+      type: i0.DriftSqlType.double, requiredDuringInsert: true);
+  static const i0.VerificationMeta _isDeletedMeta =
+      const i0.VerificationMeta('isDeleted');
+  @override
+  late final i0.GeneratedColumn<bool> isDeleted = i0.GeneratedColumn<bool>(
+      'is_deleted', aliasedName, false,
+      type: i0.DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: i0.GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_deleted" IN (0, 1))'));
+  static const i0.VerificationMeta _createdAtMeta =
+      const i0.VerificationMeta('createdAt');
+  @override
+  late final i0.GeneratedColumn<DateTime> createdAt =
+      i0.GeneratedColumn<DateTime>('created_at', aliasedName, false,
+          type: i0.DriftSqlType.dateTime, requiredDuringInsert: true);
+
   @override
   List<i0.GeneratedColumn> get $columns => [
         updatedAt,
-        createdAt,
         deletedAt,
         deletedAtLocal,
-        version,
-        isDeleted,
         id,
         title,
         description,
@@ -503,13 +510,19 @@ class $InvoicesTable extends i3.Invoices
         type,
         partyId,
         totalAmount,
-        status
+        status,
+        version,
+        isDeleted,
+        createdAt
       ];
+
   @override
   String get aliasedName => _alias ?? actualTableName;
+
   @override
   String get actualTableName => $name;
   static const String $name = 'invoices';
+
   @override
   i0.VerificationContext validateIntegrity(
       i0.Insertable<i1.InvoiceModel> instance,
@@ -522,12 +535,6 @@ class $InvoicesTable extends i3.Invoices
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
     }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
     if (data.containsKey('deleted_at')) {
       context.handle(_deletedAtMeta,
           deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta));
@@ -537,18 +544,6 @@ class $InvoicesTable extends i3.Invoices
           _deletedAtLocalMeta,
           deletedAtLocal.isAcceptableOrUnknown(
               data['deleted_at_local']!, _deletedAtLocalMeta));
-    }
-    if (data.containsKey('version')) {
-      context.handle(_versionMeta,
-          version.isAcceptableOrUnknown(data['version']!, _versionMeta));
-    } else if (isInserting) {
-      context.missing(_versionMeta);
-    }
-    if (data.containsKey('is_deleted')) {
-      context.handle(_isDeletedMeta,
-          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
-    } else if (isInserting) {
-      context.missing(_isDeletedMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -607,33 +602,34 @@ class $InvoicesTable extends i3.Invoices
     } else if (isInserting) {
       context.missing(_statusMeta);
     }
+    if (data.containsKey('version')) {
+      context.handle(_versionMeta,
+          version.isAcceptableOrUnknown(data['version']!, _versionMeta));
+    } else if (isInserting) {
+      context.missing(_versionMeta);
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    } else if (isInserting) {
+      context.missing(_isDeletedMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
     return context;
   }
 
   @override
   Set<i0.GeneratedColumn> get $primaryKey => {id};
+
   @override
   i1.InvoiceModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return i1.InvoiceModel(
-      id: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.int, data['${effectivePrefix}id'])!,
-      invoiceNo: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.string, data['${effectivePrefix}invoice_no'])!,
-      type: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.string, data['${effectivePrefix}type'])!,
-      totalAmount: attachedDatabase.typeMapping.read(
-          i0.DriftSqlType.double, data['${effectivePrefix}total_amount'])!,
-      status: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.string, data['${effectivePrefix}status'])!,
-      version: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.double, data['${effectivePrefix}version'])!,
-      isDeleted: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.bool, data['${effectivePrefix}is_deleted'])!,
-      createdAt: attachedDatabase.typeMapping.read(
-          i0.DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      updatedAt: attachedDatabase.typeMapping.read(
-          i0.DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
       partyId: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.int, data['${effectivePrefix}party_id']),
       completed: attachedDatabase.typeMapping
@@ -649,11 +645,8 @@ class $InvoicesTable extends i3.Invoices
 
 class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
   final i0.Value<DateTime> updatedAt;
-  final i0.Value<DateTime> createdAt;
   final i0.Value<DateTime?> deletedAt;
   final i0.Value<DateTime?> deletedAtLocal;
-  final i0.Value<double> version;
-  final i0.Value<bool> isDeleted;
   final i0.Value<int> id;
   final i0.Value<String> title;
   final i0.Value<String?> description;
@@ -665,13 +658,14 @@ class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
   final i0.Value<int?> partyId;
   final i0.Value<double> totalAmount;
   final i0.Value<String> status;
+  final i0.Value<double> version;
+  final i0.Value<bool> isDeleted;
+  final i0.Value<DateTime> createdAt;
+
   const InvoicesCompanion({
     this.updatedAt = const i0.Value.absent(),
-    this.createdAt = const i0.Value.absent(),
     this.deletedAt = const i0.Value.absent(),
     this.deletedAtLocal = const i0.Value.absent(),
-    this.version = const i0.Value.absent(),
-    this.isDeleted = const i0.Value.absent(),
     this.id = const i0.Value.absent(),
     this.title = const i0.Value.absent(),
     this.description = const i0.Value.absent(),
@@ -683,14 +677,15 @@ class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
     this.partyId = const i0.Value.absent(),
     this.totalAmount = const i0.Value.absent(),
     this.status = const i0.Value.absent(),
+    this.version = const i0.Value.absent(),
+    this.isDeleted = const i0.Value.absent(),
+    this.createdAt = const i0.Value.absent(),
   });
+
   InvoicesCompanion.insert({
     required DateTime updatedAt,
-    required DateTime createdAt,
     this.deletedAt = const i0.Value.absent(),
     this.deletedAtLocal = const i0.Value.absent(),
-    required double version,
-    required bool isDeleted,
     this.id = const i0.Value.absent(),
     required String title,
     this.description = const i0.Value.absent(),
@@ -702,22 +697,23 @@ class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
     this.partyId = const i0.Value.absent(),
     required double totalAmount,
     required String status,
+    required double version,
+    required bool isDeleted,
+    required DateTime createdAt,
   })  : updatedAt = i0.Value(updatedAt),
-        createdAt = i0.Value(createdAt),
-        version = i0.Value(version),
-        isDeleted = i0.Value(isDeleted),
         title = i0.Value(title),
         invoiceNo = i0.Value(invoiceNo),
         type = i0.Value(type),
         totalAmount = i0.Value(totalAmount),
-        status = i0.Value(status);
+        status = i0.Value(status),
+        version = i0.Value(version),
+        isDeleted = i0.Value(isDeleted),
+        createdAt = i0.Value(createdAt);
+
   static i0.Insertable<i1.InvoiceModel> custom({
     i0.Expression<DateTime>? updatedAt,
-    i0.Expression<DateTime>? createdAt,
     i0.Expression<DateTime>? deletedAt,
     i0.Expression<DateTime>? deletedAtLocal,
-    i0.Expression<double>? version,
-    i0.Expression<bool>? isDeleted,
     i0.Expression<int>? id,
     i0.Expression<String>? title,
     i0.Expression<String>? description,
@@ -729,14 +725,14 @@ class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
     i0.Expression<int>? partyId,
     i0.Expression<double>? totalAmount,
     i0.Expression<String>? status,
+    i0.Expression<double>? version,
+    i0.Expression<bool>? isDeleted,
+    i0.Expression<DateTime>? createdAt,
   }) {
     return i0.RawValuesInsertable({
       if (updatedAt != null) 'updated_at': updatedAt,
-      if (createdAt != null) 'created_at': createdAt,
       if (deletedAt != null) 'deleted_at': deletedAt,
       if (deletedAtLocal != null) 'deleted_at_local': deletedAtLocal,
-      if (version != null) 'version': version,
-      if (isDeleted != null) 'is_deleted': isDeleted,
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (description != null) 'description': description,
@@ -748,16 +744,16 @@ class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
       if (partyId != null) 'party_id': partyId,
       if (totalAmount != null) 'total_amount': totalAmount,
       if (status != null) 'status': status,
+      if (version != null) 'version': version,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (createdAt != null) 'created_at': createdAt,
     });
   }
 
   i2.InvoicesCompanion copyWith(
       {i0.Value<DateTime>? updatedAt,
-      i0.Value<DateTime>? createdAt,
       i0.Value<DateTime?>? deletedAt,
       i0.Value<DateTime?>? deletedAtLocal,
-      i0.Value<double>? version,
-      i0.Value<bool>? isDeleted,
       i0.Value<int>? id,
       i0.Value<String>? title,
       i0.Value<String?>? description,
@@ -768,14 +764,14 @@ class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
       i0.Value<String>? type,
       i0.Value<int?>? partyId,
       i0.Value<double>? totalAmount,
-      i0.Value<String>? status}) {
+      i0.Value<String>? status,
+      i0.Value<double>? version,
+      i0.Value<bool>? isDeleted,
+      i0.Value<DateTime>? createdAt}) {
     return i2.InvoicesCompanion(
       updatedAt: updatedAt ?? this.updatedAt,
-      createdAt: createdAt ?? this.createdAt,
       deletedAt: deletedAt ?? this.deletedAt,
       deletedAtLocal: deletedAtLocal ?? this.deletedAtLocal,
-      version: version ?? this.version,
-      isDeleted: isDeleted ?? this.isDeleted,
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
@@ -787,6 +783,9 @@ class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
       partyId: partyId ?? this.partyId,
       totalAmount: totalAmount ?? this.totalAmount,
       status: status ?? this.status,
+      version: version ?? this.version,
+      isDeleted: isDeleted ?? this.isDeleted,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -796,20 +795,11 @@ class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
     if (updatedAt.present) {
       map['updated_at'] = i0.Variable<DateTime>(updatedAt.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = i0.Variable<DateTime>(createdAt.value);
-    }
     if (deletedAt.present) {
       map['deleted_at'] = i0.Variable<DateTime>(deletedAt.value);
     }
     if (deletedAtLocal.present) {
       map['deleted_at_local'] = i0.Variable<DateTime>(deletedAtLocal.value);
-    }
-    if (version.present) {
-      map['version'] = i0.Variable<double>(version.value);
-    }
-    if (isDeleted.present) {
-      map['is_deleted'] = i0.Variable<bool>(isDeleted.value);
     }
     if (id.present) {
       map['id'] = i0.Variable<int>(id.value);
@@ -844,6 +834,15 @@ class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
     if (status.present) {
       map['status'] = i0.Variable<String>(status.value);
     }
+    if (version.present) {
+      map['version'] = i0.Variable<double>(version.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = i0.Variable<bool>(isDeleted.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = i0.Variable<DateTime>(createdAt.value);
+    }
     return map;
   }
 
@@ -851,11 +850,8 @@ class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
   String toString() {
     return (StringBuffer('InvoicesCompanion(')
           ..write('updatedAt: $updatedAt, ')
-          ..write('createdAt: $createdAt, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('deletedAtLocal: $deletedAtLocal, ')
-          ..write('version: $version, ')
-          ..write('isDeleted: $isDeleted, ')
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
@@ -866,7 +862,10 @@ class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
           ..write('type: $type, ')
           ..write('partyId: $partyId, ')
           ..write('totalAmount: $totalAmount, ')
-          ..write('status: $status')
+          ..write('status: $status, ')
+          ..write('version: $version, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
@@ -874,14 +873,13 @@ class InvoicesCompanion extends i0.UpdateCompanion<i1.InvoiceModel> {
 
 class _$InvoiceModelInsertable implements i0.Insertable<i1.InvoiceModel> {
   i1.InvoiceModel _object;
+
   _$InvoiceModelInsertable(this._object);
+
   @override
   Map<String, i0.Expression> toColumns(bool nullToAbsent) {
     return i2.InvoicesCompanion(
       updatedAt: i0.Value(_object.updatedAt),
-      createdAt: i0.Value(_object.createdAt),
-      version: i0.Value(_object.version),
-      isDeleted: i0.Value(_object.isDeleted),
       id: i0.Value(_object.id),
       completed: i0.Value(_object.completed),
       invoiceNo: i0.Value(_object.invoiceNo),
@@ -889,6 +887,9 @@ class _$InvoiceModelInsertable implements i0.Insertable<i1.InvoiceModel> {
       partyId: i0.Value(_object.partyId),
       totalAmount: i0.Value(_object.totalAmount),
       status: i0.Value(_object.status),
+
+      isDeleted: i0.Value(_object.isDeleted),
+      createdAt: i0.Value(_object.createdAt),
     ).toColumns(false);
   }
 }

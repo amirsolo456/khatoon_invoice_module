@@ -18,7 +18,7 @@ class PaymentsModel extends Payment {
     super.toPartyId,
     super.reference,
     super.notes,
-    required super.version,
+
     required super.isDeleted,
     required super.createdAt,
     required super.updatedAt,
@@ -31,4 +31,7 @@ class PaymentsModel extends Payment {
 
   @override
   Map<String, dynamic> toJson() => _$PaymentsModelToJson(this);
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  bool isSelected = false;
 }

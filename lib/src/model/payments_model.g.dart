@@ -16,7 +16,7 @@ PaymentsModel _$PaymentsModelFromJson(Map<String, dynamic> json) =>
       toPartyId: (json['toPartyId'] as num?)?.toInt(),
       reference: json['reference'] as String?,
       notes: json['notes'] as String?,
-      version: (json['version'] as num).toDouble(),
+
       isDeleted: json['isDeleted'] as bool,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
@@ -38,7 +38,7 @@ Map<String, dynamic> _$PaymentsModelToJson(PaymentsModel instance) =>
       'toPartyId': instance.toPartyId,
       'reference': instance.reference,
       'notes': instance.notes,
-      'version': instance.version,
+
       'isDeleted': instance.isDeleted,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),

@@ -12,7 +12,6 @@ import '../table/invoices.drift.dart';
 import '../table/payments.dart';
 import 'data_base.drift.dart';
 
-import 'data_base.drift.dart';
 
 @DriftDatabase(tables: [Invoices,InvoiceItems,Payments], daos: [InvoiceDao,InvoiceItemsDao,PaymentsDao])
 final class AppDatabase extends $AppDatabase {
@@ -35,9 +34,11 @@ final class AppDatabase extends $AppDatabase {
   }
 
 
+  @override
   int get schemaVersion => 2;
 
 
+  @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) async {
       await m.createAll();

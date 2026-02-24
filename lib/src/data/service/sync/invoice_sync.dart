@@ -1,9 +1,7 @@
 import 'package:invoice_module/index.dart';
-import 'package:invoice_module/src/data/table/invoices.dart';
 import 'package:invoice_module/src/data/table/invoices.drift.dart';
 import 'package:invoice_module/src/syncable_table.dart' as sync;
 
-import '../../db/data_base.dart';
 
 
 
