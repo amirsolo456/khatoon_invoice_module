@@ -16,10 +16,10 @@ class InvoiceItems extends Table with SyncColumns{
   IntColumn get partyId => integer().nullable()();
   IntColumn get sellerEmployeeId => integer().nullable()();
  
-  @override
-  BoolColumn get isDeleted => boolean()();
-  @override
-  DateTimeColumn get createdAt => dateTime()();
+  // @override
+  // BoolColumn get isDeleted => boolean()();
+  // @override
+  // DateTimeColumn get createdAt => dateTime()();
 
 
   @override

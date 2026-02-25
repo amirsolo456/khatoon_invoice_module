@@ -10,6 +10,7 @@ class InvoiceItemsModel extends InvoiceLine {
   @JsonKey(includeFromJson: false, includeToJson: false)
   double total = 0;
 
+  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   int? productId;
   @JsonKey(includeFromJson: false, includeToJson: false)

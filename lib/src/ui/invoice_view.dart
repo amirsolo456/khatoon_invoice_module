@@ -100,9 +100,9 @@ class _InvoicePageState extends State<InvoiceView> {
   @override
   void initState() {
     super.initState();
-    if (widget.initialInvoice != null) {
+    if (widget.initialInvoice.completed ) {
       // ویرایش فاکتور موجود
-      final inv = widget.initialInvoice!;
+      final inv = widget.initialInvoice;
       seller = PartyInfo(); // فروشنده از جای دیگری می‌آید (مثلاً شرکت پیش‌فرض)
       // اگر partyId در فاکتور وجود دارد، آن را به عنوان خریدار در نظر بگیرید
       // برای سادگی، یک PartyInfo با name خالی و partyId از فاکتور می‌سازیم
@@ -340,7 +340,7 @@ class _InvoicePageState extends State<InvoiceView> {
                                   keyboardType: TextInputType.number,
                                   textAlign: TextAlign.center,
                                   onChanged: (val) {
-                                    item.quantity == int.tryParse(val) ?? 1;
+                                    item.quantity == int.tryParse(val);
                                     setState(() {});
                                   },
                                 ),

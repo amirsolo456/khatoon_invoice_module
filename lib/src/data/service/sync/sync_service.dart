@@ -58,7 +58,7 @@ class SyncService extends ChangeNotifier {
       base: _baseUri,
       token: () async => '',
       tables: [todoSync],
-      config: SyncConfig(),
+      config: config,
       client: _httpClient,
       maxRetries: maxRetries,
     );

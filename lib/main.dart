@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:invoice_module/src/ui/invoice_view.dart';
 
 import 'index.dart';
 

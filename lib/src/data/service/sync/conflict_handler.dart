@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
-import 'package:offline_first_sync_drift/src/config.dart';
-import 'package:offline_first_sync_drift/src/conflict_resolution.dart';
-import 'package:offline_first_sync_drift/src/op.dart';
-import 'package:offline_first_sync_drift/src/sync_events.dart';
-import 'package:offline_first_sync_drift/src/syncable_table.dart';
-import 'package:offline_first_sync_drift/src/transport_adapter.dart';
+import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
+// import 'package:offline_first_sync_drift/src/config.dart';
+// import 'package:offline_first_sync_drift/src/conflict_resolution.dart';
+// import 'package:offline_first_sync_drift/src/op.dart';
+// import 'package:offline_first_sync_drift/src/sync_events.dart';
+// import 'package:offline_first_sync_drift/src/syncable_table.dart';
+// import 'package:offline_first_sync_drift/src/transport_adapter.dart';
 
 /// Result of conflict resolution.
 class ConflictResolutionResult {

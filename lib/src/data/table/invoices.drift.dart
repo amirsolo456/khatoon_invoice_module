@@ -475,13 +475,13 @@ class $InvoicesTable extends i3.Invoices
       type: i0.DriftSqlType.string, requiredDuringInsert: true);
   static const i0.VerificationMeta _versionMeta =
       const i0.VerificationMeta('version');
-  @override
+
   late final i0.GeneratedColumn<double> version = i0.GeneratedColumn<double>(
       'version', aliasedName, false,
       type: i0.DriftSqlType.double, requiredDuringInsert: true);
   static const i0.VerificationMeta _isDeletedMeta =
       const i0.VerificationMeta('isDeleted');
-  @override
+
   late final i0.GeneratedColumn<bool> isDeleted = i0.GeneratedColumn<bool>(
       'is_deleted', aliasedName, false,
       type: i0.DriftSqlType.bool,
@@ -490,12 +490,12 @@ class $InvoicesTable extends i3.Invoices
           'CHECK ("is_deleted" IN (0, 1))'));
   static const i0.VerificationMeta _createdAtMeta =
       const i0.VerificationMeta('createdAt');
-  @override
+
   late final i0.GeneratedColumn<DateTime> createdAt =
       i0.GeneratedColumn<DateTime>('created_at', aliasedName, false,
           type: i0.DriftSqlType.dateTime, requiredDuringInsert: true);
 
-  @override
+
   List<i0.GeneratedColumn> get $columns => [
         updatedAt,
         deletedAt,
