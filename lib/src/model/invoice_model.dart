@@ -1,3 +1,4 @@
+import 'package:invoice_module/index.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:khatoon_shared/index.dart'; // شامل کلاس Invoice
 
@@ -6,31 +7,17 @@ part 'invoice_model.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 class InvoiceModel extends Invoice {
   final bool completed;
-  final List<InvoiceLine> items; // استفاده از کلاس Drift
+  final List<InvoiceItemsModel> items; // استفاده از کلاس Drift
   final List<Payment> payments; // استفاده از کلاس Drift
   InvoiceModel({
     super.partyId,
     this.completed = false,
     required this.items,
     required this.payments,
-  }) : super(
-          id: 0,
-          invoiceNo: '0',
-          type: '',
-          totalAmount: 0,
-          status: '',
-
-          isDeleted: false,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        );
+  }) : super(id: 0, invoiceNo: '0', type: '', totalAmount: 0, status: '');
 
   factory InvoiceModel.empty() {
-    return InvoiceModel(
-      items: [],
-      payments: [],
-      completed: false,
-    );
+    return InvoiceModel(items: [], payments: [], completed: false);
   }
 
   // اگر نیاز به کپی کردن با تغییرات دارید
@@ -46,10 +33,7 @@ class InvoiceModel extends Invoice {
     DateTime? updatedAt,
     bool? completed,
   }) {
-    return InvoiceModel(
-      items: [],
-      payments: [],
-    );
+    return InvoiceModel(items: [], payments: []);
   }
 
   @override
@@ -66,26 +50,12 @@ class InvoiceModel extends Invoice {
         other.type == type &&
         other.totalAmount == totalAmount &&
         other.status == status &&
-
-        other.isDeleted == isDeleted &&
-        other.createdAt == createdAt &&
-        other.updatedAt == updatedAt &&
         other.completed == completed;
   }
 
   @override
-  int get hashCode => Object.hash(
-        id,
-        invoiceNo,
-        type,
-        totalAmount,
-        status,
-
-        isDeleted,
-        createdAt,
-        updatedAt,
-        completed,
-      );
+  int get hashCode =>
+      Object.hash(id, invoiceNo, type, totalAmount, status, completed);
 
   factory InvoiceModel.fromJson(Map<String, dynamic> json) =>
       _$InvoiceModelFromJson(json);

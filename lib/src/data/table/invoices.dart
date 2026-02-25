@@ -18,11 +18,7 @@ class Invoices extends Table with SyncColumns {
   RealColumn get totalAmount => real()();
   TextColumn get status => text()();
 
-  // RealColumn  get version => real()();
-  //
-  // BoolColumn get isDeleted => boolean()();
-  //
-  // DateTimeColumn get createdAt => dateTime()();
+
 
   @override
   Set<Column> get primaryKey => {id};

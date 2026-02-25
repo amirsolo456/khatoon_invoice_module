@@ -3,6 +3,7 @@ import 'package:drift/native.dart'; // یا use SqliteExecutor for platform spec
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+import '../../../index.dart';
 import '../service/invoice_dao.dart';
 import '../service/invoice_items_dao.dart';
 import '../service/payments_dao.dart';
@@ -13,7 +14,7 @@ import '../table/payments.dart';
 import 'data_base.drift.dart';
 
 
-@DriftDatabase(tables: [Invoices,InvoiceItems,Payments], daos: [InvoiceDao,InvoiceItemsDao,PaymentsDao])
+@DriftDatabase(tables: [Invoices,InvoiceItems,Payments, Parties], daos: [InvoiceDao,InvoiceItemsDao,PaymentsDao, PartiesDao])
 final class AppDatabase extends $AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 

@@ -1,9 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:invoice_module/index.dart';
+
 
 // Note: For printing functionalitlutter, you would typically use the 'pdf' and 'printing' packages.
 // Add them to your pubspec.yaml:
@@ -48,12 +48,13 @@ class PartyInfo {
   String address;
   int? partyId;
 
-  PartyInfo(
-      {this.name = '',
-      this.nationalId = '',
-      this.phone = '',
-      this.partyId,
-      this.address = ''});
+  PartyInfo({
+    this.name = '',
+    this.nationalId = '',
+    this.phone = '',
+    this.partyId,
+    this.address = '',
+  });
 }
 
 // Mock Data
@@ -70,8 +71,22 @@ final List<Product> mockProducts = [
 
 class InvoiceView extends StatefulWidget {
   final InvoiceModel initialInvoice;
+  final Future<void> Function(InvoiceModel) onSelect;
+  final Future<void> Function(
+    InvoiceModel,
+    PartyInfo,
+    PartyInfo,
+    List<InvoiceItemsModel>,
+    double,
+  )
+  onPrint;
 
-  const InvoiceView({super.key, required this.initialInvoice});
+  const InvoiceView({
+    super.key,
+    required this.onSelect,
+    required this.initialInvoice,
+    required this.onPrint,
+  });
 
   @override
   State<InvoiceView> createState() => _InvoicePageState();
@@ -80,55 +95,42 @@ class InvoiceView extends StatefulWidget {
 class _InvoicePageState extends State<InvoiceView> {
   PartyInfo seller = PartyInfo();
   PartyInfo buyer = PartyInfo();
+
   late List<InvoiceItemsModel> items = [];
 
   final double taxRate = 0.09;
 
-  double get subTotal => items.fold(0, (sum, item) => sum + itemsTotal);
-
-  double v = 0.0;
+  double get subTotal => items.fold<double>(
+    0,
+    (sum, item) => sum + (item.quantity * item.unitPrice),
+  );
 
   double get itemsTotal =>
-      (items == [] ? 0 : items.map((i) => i.total += i.unitPrice).last);
+      items.isNotEmpty ? items.last.quantity * items.last.unitPrice : 0;
 
   double get taxAmount => subTotal * taxRate;
 
   double get grandTotal => subTotal + taxAmount;
 
+  double v = 0.0;
+
   final intl.NumberFormat currencyFormat = intl.NumberFormat("#,##0", "fa_IR");
+  late List<TextEditingController> _qtyControllers;
+  late List<TextEditingController> _priceControllers;
 
   @override
   void initState() {
     super.initState();
-    if (widget.initialInvoice.completed ) {
-      // ویرایش فاکتور موجود
+    // _qtyControllers = items.map((e) => TextEditingController(text: e.quantity.toString())).toList();
+    // _priceControllers = items.map((e) => TextEditingController(text: e.unitPrice.toStringAsFixed(0))).toList();
+    _initializeControllers();
+    if (widget.initialInvoice.completed) {
       final inv = widget.initialInvoice;
-      seller = PartyInfo(); // فروشنده از جای دیگری می‌آید (مثلاً شرکت پیش‌فرض)
-      // اگر partyId در فاکتور وجود دارد، آن را به عنوان خریدار در نظر بگیرید
-      // برای سادگی، یک PartyInfo با name خالی و partyId از فاکتور می‌سازیم
+      seller = PartyInfo();
       buyer = PartyInfo(partyId: inv.partyId);
-      // تبدیل InvoiceLine به InvoiceItemsModel (با فرض اینکه همه آیتم‌ها از نوع InvoiceItemsModel هستند)
       items = inv.items.map((line) {
-        if (line is InvoiceItemsModel) {
-          return line;
-        } else {
-          // در غیر اینصورت یک InvoiceItemsModel از روی line می‌سازیم
-          return InvoiceItemsModel(
-            productId: line.productId,
-            description: line.description,
-            // سایر فیلدها را از line کپی می‌کنیم (مقداردهی در سازنده InvoiceItemsModel انجام نمی‌شود)
-          );
-          // ..id = line.id
-          // ..invoiceId = line.invoiceId
-          // ..version = line.version
-          // ..isDeleted = line.isDeleted
-          // ..createdAt = line.createdAt
-          // ..updatedAt = line.updatedAt
-          // ..lineTotal = line.lineTotal
-          // ..quantity = line.quantity
-          // ..unitPrice = line.unitPrice;
-        }
-      }).toList();
+        return line;
+            }).toList();
     } else {
       seller = PartyInfo();
       buyer = PartyInfo();
@@ -136,17 +138,44 @@ class _InvoicePageState extends State<InvoiceView> {
     }
   }
 
+  @override
+  void dispose() {
+    // ✅ تمام controllers را آزاد کنید
+    for (var controller in _qtyControllers.reversed ) {
+      controller.dispose();
+    }
+    for (var controller in _priceControllers.reversed) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+
+
+  void _initializeControllers() {
+  _qtyControllers.clear();
+  _priceControllers.clear();
+
+    for (int i = 0; i < items.length; i++) {
+  _qtyControllers[i] = TextEditingController(
+        text: items[i].quantity.toString(),
+      );
+      _priceControllers[i] = TextEditingController(
+        text: items[i].unitPrice.toStringAsFixed(0),
+      );
+    }
+  }
+
   InvoiceItemsModel _createNewItem() {
-    return InvoiceItemsModel(
-      productId: null,
-      description: '',
-    );
+    return InvoiceItemsModel(productId: null, description: '');
   }
 
   void _addItem() {
-    setState(() {
-      items.add(InvoiceItemsModel());
-    });
+  setState(() {
+  items.add(InvoiceItemsModel());
+  _qtyControllers.add(TextEditingController(text: '1'));
+  _priceControllers.add(TextEditingController(text: '0'));
+  });
   }
 
   void _removeItem(int index) {
@@ -165,8 +194,9 @@ class _InvoicePageState extends State<InvoiceView> {
         content: const Text('آیا مطمئن هستید؟ تمام اطلاعات پاک خواهد شد.'),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('خیر')),
+            onPressed: () => Navigator.pop(context),
+            child: const Text('خیر'),
+          ),
           TextButton(
             onPressed: () {
               setState(() {
@@ -178,38 +208,17 @@ class _InvoicePageState extends State<InvoiceView> {
                 buyer.nationalId = '';
                 buyer.phone = '';
                 buyer.address = '';
-                items = [_createNewItem()]; // Use the helper method
+                items = [_createNewItem()];
               });
               Navigator.pop(context);
             },
-            child:
-                const Text('بله، پاک کن', style: TextStyle(color: Colors.red)),
+            child: const Text(
+              'بله، پاک کن',
+              style: TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
-    );
-  }
-
-  void _saveInvoice() {
-    // ایجاد یک نمونه InvoiceModel با داده‌های فعلی
-    final invoice = InvoiceModel(
-      partyId: buyer.partyId,
-      // شناسه خریدار (در صورت وجود)
-      completed: false,
-      items: items,
-      // آیتم‌ها از نوع InvoiceLine هستند
-      payments: [], // فعلاً خالی
-    );
-
-    // اینجا منطق ذخیره‌سازی (API، دیتابیس) را پیاده‌سازی کنید
-    if (kDebugMode) {
-      print('Invoice saved: ${invoice.toJson()}');
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('فاکتور با موفقیت ذخیره شد'),
-          backgroundColor: Colors.green),
     );
   }
 
@@ -218,8 +227,10 @@ class _InvoicePageState extends State<InvoiceView> {
     // await Printing.layoutPdf(onLayout: (format) => _generatePdf(format, title));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('دستور پرینت ارسال شد (نیاز به پکیج printing)')),
+        content: Text('دستور پرینت ارسال شد (نیاز به پکیج printing)'),
+      ),
     );
+    widget.onPrint(widget.initialInvoice, buyer, seller, items, taxRate);
   }
 
   void _openProductSelection(int index) async {
@@ -229,8 +240,9 @@ class _InvoicePageState extends State<InvoiceView> {
     );
 
     if (selectedProduct != null) {
-      setState(() async {
-        items[index].productId = selectedProduct.id;
+      setState(() {
+        // ✅ تعیین صحیح بدون async
+        items[index].pId = selectedProduct.id;
         items[index].productName = selectedProduct.name;
         items[index].price = selectedProduct.price;
       });
@@ -246,17 +258,22 @@ class _InvoicePageState extends State<InvoiceView> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-              icon: const Icon(Icons.print),
-              onPressed: _printInvoice,
-              tooltip: 'چاپ'),
+            icon: const Icon(Icons.print),
+            onPressed: _printInvoice,
+            tooltip: 'چاپ',
+          ),
           IconButton(
-              icon: const Icon(Icons.save),
-              onPressed: _saveInvoice,
-              tooltip: 'ذخیره'),
+            icon: const Icon(Icons.save),
+            onPressed: () async {
+              await widget.onSelect(widget.initialInvoice);
+            },
+            tooltip: 'ذخیره',
+          ),
           IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: _resetInvoice,
-              tooltip: 'جدید'),
+            icon: const Icon(Icons.refresh),
+            onPressed: _resetInvoice,
+            tooltip: 'جدید',
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -268,11 +285,12 @@ class _InvoicePageState extends State<InvoiceView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                    child:
-                        PartyInfoCard(title: 'مشخصات فروشنده', info: seller)),
+                  child: PartyInfoCard(title: 'مشخصات فروشنده', info: seller),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
-                    child: PartyInfoCard(title: 'مشخصات خریدار', info: buyer)),
+                  child: PartyInfoCard(title: 'مشخصات خریدار', info: buyer),
+                ),
               ],
             ),
             const SizedBox(height: 24),
@@ -287,13 +305,18 @@ class _InvoicePageState extends State<InvoiceView> {
                   children: [
                     const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('اقلام فاکتور',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'اقلام فاکتور',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      child: DataTable(
+                      child:
+                      DataTable(
                         columnSpacing: 20,
                         columns: const [
                           DataColumn(label: Text('#')),
@@ -304,74 +327,95 @@ class _InvoicePageState extends State<InvoiceView> {
                           DataColumn(label: Text('حذف')),
                         ],
                         rows: List.generate(items.length, (index) {
-                          final InvoiceItemsModel item = items[index];
+                          final item = items[index];
                           return DataRow(cells: [
                             DataCell(Text('${index + 1}')),
                             DataCell(
                               InkWell(
                                 onTap: () => _openProductSelection(index),
                                 child: Container(
-                                  constraints:
-                                      const BoxConstraints(minWidth: 150),
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 4),
+                                  constraints: const BoxConstraints(minWidth: 180),
+                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                                   decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: Colors.grey.shade300),
+                                    border: Border.all(color: Colors.grey.shade300),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
-                                    item.description == null
-                                        ? 'انتخاب کالا...'
-                                        : '',
+                                    item.description ?? item.productName ?? '',
                                     style: TextStyle(
-                                        color: item.description == null
-                                            ? Colors.grey
-                                            : Colors.black),
+                                      color: item.productName == 'انتخاب کالا...' ? Colors.grey : Colors.black87,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
+                            // تعداد
                             DataCell(
                               SizedBox(
-                                width: 60,
+                                width: 70,
                                 child: TextFormField(
-                                  initialValue: item.quantity.toString(),
-                                  keyboardType: TextInputType.number,
+                                  controller: _qtyControllers[index],
+                                  keyboardType: const TextInputType.numberWithOptions(decimal: false),
                                   textAlign: TextAlign.center,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                  ),
                                   onChanged: (val) {
-                                    item.quantity == int.tryParse(val);
-                                    setState(() {});
+                                    final parsed = int.tryParse(val);
+                                    if (parsed != null && parsed != item.quantity) {
+                                      setState(() {
+                                        item.quan = parsed.clamp(1, 999999) as double; // محدود کردن منطقی
+                                      });
+                                    }
                                   },
                                 ),
                               ),
                             ),
+                            // مبلغ واحد
                             DataCell(
                               SizedBox(
-                                width: 100,
+                                width: 130,
                                 child: TextFormField(
-                                  initialValue:
-                                      item.unitPrice.toStringAsFixed(0),
-                                  keyboardType: TextInputType.number,
+                                  controller: _priceControllers[index],
+                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                  textAlign: TextAlign.end,
                                   decoration: const InputDecoration(
-                                      suffixText: ' ریال'),
+                                    border: OutlineInputBorder(),
+                                    suffixText: ' ریال',
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                  ),
                                   onChanged: (val) {
-                                    item.quan = double.tryParse(val) ?? 0.0;
+                                    final cleanVal = val.replaceAll(',', '').replaceAll('٬', '');
+                                    final parsed = double.tryParse(cleanVal);
+                                    if (parsed != null && parsed != item.unitPrice) {
+                                      setState(() {
+                                        item.price = parsed < 0 ? 0 : parsed;
+                                      });
+                                    }
                                   },
                                 ),
                               ),
                             ),
-                            DataCell(Text(currencyFormat.format(item.total))),
+                            // مبلغ کل ردیف (به‌روز می‌شود)
+                            DataCell(
+                              Text(
+                                currencyFormat.format(item.total),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: item.total > 0 ? Colors.blueGrey[900] : Colors.grey,
+                                ),
+                              ),
+                            ),
                             DataCell(
                               IconButton(
-                                icon:
-                                    const Icon(Icons.delete, color: Colors.red),
+                                icon: const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () => _removeItem(index),
                               ),
                             ),
                           ]);
                         }),
-                      ),
+                      )
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -400,8 +444,12 @@ class _InvoicePageState extends State<InvoiceView> {
                     _buildSummaryRow('جمع کل:', subTotal),
                     _buildSummaryRow('مالیات و عوارض (9%):', taxAmount),
                     const Divider(thickness: 1.5),
-                    _buildSummaryRow('مبلغ قابل پرداخت:', grandTotal,
-                        isBold: true, fontSize: 18),
+                    _buildSummaryRow(
+                      'مبلغ قابل پرداخت:',
+                      grandTotal,
+                      isBold: true,
+                      fontSize: 18,
+                    ),
                   ],
                 ),
               ),
@@ -412,23 +460,31 @@ class _InvoicePageState extends State<InvoiceView> {
     );
   }
 
-  Widget _buildSummaryRow(String label, double amount,
-      {bool isBold = false, double fontSize = 14}) {
+  Widget _buildSummaryRow(
+    String label,
+    double amount, {
+    bool isBold = false,
+    double fontSize = 14,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(
-                  fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                  fontSize: fontSize)),
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+              fontSize: fontSize,
+            ),
+          ),
           Text(
             '${currencyFormat.format(amount)} ریال',
             style: TextStyle(
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                fontSize: fontSize,
-                fontFamily: 'Courier'), // Monospaced if available
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+              fontSize: fontSize,
+              fontFamily: 'Courier',
+            ), // Monospaced if available
           ),
         ],
       ),
@@ -450,9 +506,10 @@ class PartyInfoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
             const Divider(),
             _buildTextField('نام', (val) => info.name = val),
             _buildTextField('کد ملی', (val) => info.nationalId = val),
@@ -491,8 +548,9 @@ class _ProductSelectionDialogState extends State<ProductSelectionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredProducts =
-        mockProducts.where((p) => p.name.contains(searchTerm)).toList();
+    final filteredProducts = mockProducts
+        .where((p) => p.name.contains(searchTerm))
+        .toList();
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -505,12 +563,14 @@ class _ProductSelectionDialogState extends State<ProductSelectionDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('انتخاب کالا',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Text(
+                  'انتخاب کالا',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
                 IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context)),
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -536,7 +596,8 @@ class _ProductSelectionDialogState extends State<ProductSelectionDialog> {
                   return ListTile(
                     title: Text(product.name),
                     subtitle: Text(
-                        '${intl.NumberFormat("#,##0").format(product.price)} ریال'),
+                      '${intl.NumberFormat("#,##0").format(product.price)} ریال',
+                    ),
                     onTap: () {
                       Navigator.pop(context, product);
                     },

@@ -10,16 +10,15 @@ class InvoiceItemsModel extends InvoiceLine {
   @JsonKey(includeFromJson: false, includeToJson: false)
   double total = 0;
 
-  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  int? productId;
+  int? pId;
   @JsonKey(includeFromJson: false, includeToJson: false)
   String? productName;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
-  double?  price;
+  double? price;
   @JsonKey(includeFromJson: false, includeToJson: false)
-  double?  quan;
+  double? quan;
 
   InvoiceItemsModel({
     int? productId,
@@ -27,15 +26,16 @@ class InvoiceItemsModel extends InvoiceLine {
     int? partyId,
     int? sellerEmployeeId,
   }) : super(
-            id: 0,
-            invoiceId: 0,
+         id: 0,
+         invoiceId: 0,
 
-            isDeleted: false,
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-            lineTotal: 0,
-            quantity: 0.0,
-            unitPrice: 0.0);
+         isDeleted: false,
+         createdAt: DateTime.now(),
+         updatedAt: DateTime.now(),
+         lineTotal: 0,
+         quantity: 0.0,
+         unitPrice: 0.0,
+       );
 
   factory InvoiceItemsModel.fromJson(Map<String, dynamic> json) =>
       _$InvoiceItemsModelFromJson(json);

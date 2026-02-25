@@ -1,6 +1,8 @@
 # ignore everything by default
-/*
-
+*
+/khatoon_shared
+/khatoon_container
+/khatoon_modules
 # but keep these
 !.gitignore
 !README.md

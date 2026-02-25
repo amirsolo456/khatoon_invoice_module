@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'index.dart';
 
 void main() => runApp(const MyApp());
 
@@ -23,9 +22,9 @@ class MyApp extends StatelessWidget {
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: InvoiceView(
-        initialInvoice: InvoiceModel(items: [], payments: []),
-      ),
+      // home: InvoiceView(
+      //   initialInvoice: InvoiceModel(items: [], payments: []), onSelect: (InvoiceModel p1) { return p1;},
+      // ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:offline_first_sync_drift/src/constants.dart';
+import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
+
 
 /// Configuration for a syncable table.
 /// Registered in SyncEngine for automatic synchronization.

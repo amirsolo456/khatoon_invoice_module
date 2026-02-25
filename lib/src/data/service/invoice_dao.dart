@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:invoice_module/src/data/table/payments.drift.dart';
 
+import '../../../index.dart';
 import '../../model/invoice_model.dart';
 import '../db/data_base.dart';
 import '../table/invoice_items.dart';
@@ -8,11 +9,23 @@ import '../table/invoice_items.drift.dart';
 import '../table/invoices.dart';
 import '../table/invoices.drift.dart';
 import '../table/payments.dart';
-import 'invoice_dao.drift.dart';
+part 'invoice_dao.drift.dart';
 
-@DriftAccessor(tables: [Invoices, InvoiceItems, Payments])
+@DriftAccessor(tables: [Invoices, InvoiceItems, Payments, Parties ])
 class InvoiceDao extends DatabaseAccessor<AppDatabase> with $InvoiceDaoMixin {
   InvoiceDao(super.db);
+  // Future<int> saveOrUpdateParty(PartyModel party) async {
+  //   if (party.id == null) {
+  //     // درج جدید — DB id می‌سازد
+  //     final id = await into(db.parties).insert(party.toCompanionForInsert());
+  //     party.id = id;
+  //     return id;
+  //   } else {
+  //     // آپدیت موجود
+  //     await into(db.parties).insertOnConflictUpdate(party.toCompanionForUpdate());
+  //     return party.id!;
+  //   }
+  // }
 
   // ذخیره کامل فاکتور با آیتم‌ها و پرداخت‌ها
   Future<void> saveFullInvoice(InvoiceModel invoice) async {
@@ -26,10 +39,10 @@ class InvoiceDao extends DatabaseAccessor<AppDatabase> with $InvoiceDaoMixin {
           partyId: Value(invoice.partyId),
           totalAmount: Value(invoice.totalAmount),
           status: Value(invoice.status),
-          createdAt: Value(invoice.createdAt),
+            dueDate:  Value(invoice.createdAt),
           updatedAt: Value(DateTime.now()),
 
-          isDeleted: Value(invoice.isDeleted),
+            completed:   Value(invoice.isDeleted),
         ),
       );
 
@@ -46,9 +59,9 @@ class InvoiceDao extends DatabaseAccessor<AppDatabase> with $InvoiceDaoMixin {
               description: Value(item.description),
               quantity: Value(item.quantity),
               unitPrice: Value(item.unitPrice),
-              createdAt: Value(item.createdAt),
+                 :   Value(item.createdAt),
               updatedAt: Value(item.updatedAt),
-              isDeleted: Value(item.isDeleted),
+              isDeleted  : Value(item.isDeleted),
             ),
             mode: InsertMode.insertOrReplace,
           );
@@ -73,8 +86,9 @@ class InvoiceDao extends DatabaseAccessor<AppDatabase> with $InvoiceDaoMixin {
       // }
 
       // ۳. ذخیره پرداخت‌ها (به همین ترتیب)
-      await (delete(db.payments)..where((t) => t.invoiceId.equals(invoice.id)))
-          .go();
+      await (delete(
+        db.payments,
+      )..where((t) => t.invoiceId.equals(invoice.id))).go();
       for (final payment in invoice.payments) {
         await into(db.payments).insert(
           PaymentsCompanion(
@@ -91,20 +105,42 @@ class InvoiceDao extends DatabaseAccessor<AppDatabase> with $InvoiceDaoMixin {
 
   // دریافت کامل فاکتور به همراه آیتم‌ها و پرداخت‌ها
   Future<InvoiceModel?> getFullInvoiceById(int id) async {
-    final invoice = await (select(db.invoices)..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final invoice = await (select(
+      db.invoices,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
     if (invoice == null) return null;
 
-    final items = await (select(db.invoiceItems)
-          ..where((t) => t.invoiceId.equals(id)))
-        .get();
-    final payments =
-        await (select(db.payments)..where((t) => t.invoiceId.equals(id))).get();
+    final items = await (select(
+      db.invoiceItems,
+    )..where((t) => t.invoiceId.equals(id))).get();
+    final payments = await (select(
+      db.payments,
+    )..where((t) => t.invoiceId.equals(id))).get();
 
     // تبدیل به InvoiceModel (اگر سازنده مناسب دارد)
     return InvoiceModel(
       // partyId: invoice.partyId,
+      items: items,
+      payments: payments,
+    );
+  }
 
+  Future<InvoiceModel?> getPartyInfoByInvoiceId(int id) async {
+    final invoice = await (select(
+      db.invoices,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+    if (invoice == null) return null;
+
+    final items = await (select(
+      db.invoiceItems,
+    )..where((t) => t.invoiceId.equals(id))).get();
+    final payments = await (select(
+      db.payments,
+    )..where((t) => t.invoiceId.equals(id))).get();
+
+    // تبدیل به InvoiceModel (اگر سازنده مناسب دارد)
+    return InvoiceModel(
+      // partyId: invoice.partyId,
       items: items,
       payments: payments,
     );

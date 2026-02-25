@@ -10,5 +10,5 @@ sync.SyncableTable<InvoiceModel> invoiceSyncTable(AppDatabase db) => db.invoices
   toJson: (t) => t.toJson(),
   toInsertable: (t) => t.toInsertable(),
   getId: (t) => t.id.toString(),
-  getUpdatedAt: (t) => t.updatedAt,
+  getUpdatedAt: (t) => t.,
 );
