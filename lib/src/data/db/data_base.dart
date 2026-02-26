@@ -1,21 +1,21 @@
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart'; // یا use SqliteExecutor for platform specific
+import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../index.dart';
-import '../service/invoice_dao.dart';
-import '../service/invoice_items_dao.dart';
-import '../service/payments_dao.dart';
 import '../table/invoice_items.dart';
 import '../table/invoices.dart';
-import '../table/invoices.drift.dart';
+
 import '../table/payments.dart';
 import 'data_base.drift.dart';
 
-
-@DriftDatabase(tables: [Invoices,InvoiceItems,Payments, Parties], daos: [InvoiceDao,InvoiceItemsDao,PaymentsDao, PartiesDao])
-final class AppDatabase extends $AppDatabase {
+@DriftDatabase(
+  tables: [Invoices, InvoiceItems, Payments, Parties],
+  daos: [InvoiceDao, InvoiceItemsDao, PaymentsDao, PartiesDao],
+)
+final class AppDatabase extends $AppDatabase with SyncDatabaseMixin{
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   factory AppDatabase.open() {
@@ -34,23 +34,13 @@ final class AppDatabase extends $AppDatabase {
     });
   }
 
-
   @override
-  int get schemaVersion => 2;
-
+  int get schemaVersion => 1;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) async {
       await m.createAll();
     },
-    onUpgrade: (m, from, to) async {
-      if (from < 2) {
-        // اگر syncOutboxMeta تولید شده باشد این کار درست است:
-        await m.createTable($InvoicesTable(attachedDatabase));
-      }
-    },
   );
-
-
 }

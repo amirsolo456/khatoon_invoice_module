@@ -1,11 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:khatoon_shared/index.dart';
-import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
 
 part 'payments_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-final class PaymentsModel extends Payment  with SyncColumns {
+final class PaymentsModel extends Payment   {
   // final DateTime? deletedAt;
   // final DateTime? deletedAtLocal;
 

@@ -44,13 +44,14 @@ dependencies:
   syncfusion_flutter_datagrid: ^32.1.21
   khatoon_shared:
     path: ../../khatoon_shared
+  build_runner: ^2.11.1
+  persian_fonts: ^1.0.6
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
 
   drift_dev: ^2.27.0
-  build_runner: ^2.4.15
   json_serializable: ^6.9.4
   mocktail: ^1.0.4
 

@@ -1,19 +1,15 @@
 import 'package:drift/drift.dart';
-import 'package:invoice_module/src/data/table/payments.drift.dart';
 
 import '../../../index.dart';
-import '../../model/invoice_model.dart';
-import '../db/data_base.dart';
 import '../table/invoice_items.dart';
-import '../table/invoice_items.drift.dart';
 import '../table/invoices.dart';
-import '../table/invoices.drift.dart';
 import '../table/payments.dart';
-part 'invoice_dao.drift.dart';
+
 
 @DriftAccessor(tables: [Invoices, InvoiceItems, Payments, Parties ])
-class InvoiceDao extends DatabaseAccessor<AppDatabase> with $InvoiceDaoMixin {
+class InvoiceDao extends DatabaseAccessor<AppDatabase> {
   InvoiceDao(super.db);
+}
   // Future<int> saveOrUpdateParty(PartyModel party) async {
   //   if (party.id == null) {
   //     // درج جدید — DB id می‌سازد
@@ -26,12 +22,13 @@ class InvoiceDao extends DatabaseAccessor<AppDatabase> with $InvoiceDaoMixin {
   //     return party.id!;
   //   }
   // }
+/*
 
   // ذخیره کامل فاکتور با آیتم‌ها و پرداخت‌ها
   Future<void> saveFullInvoice(InvoiceModel invoice) async {
     await db.transaction(() async {
       // ۱. ذخیره فاکتور اصلی
-      await into(db.invoices).insertOnConflictUpdate(
+      await into(db.invoices) .insertOnConflictUpdate(
         InvoicesCompanion(
           id: Value(invoice.id),
           invoiceNo: Value(invoice.invoiceNo),
@@ -146,3 +143,4 @@ class InvoiceDao extends DatabaseAccessor<AppDatabase> with $InvoiceDaoMixin {
     );
   }
 }
+*/
