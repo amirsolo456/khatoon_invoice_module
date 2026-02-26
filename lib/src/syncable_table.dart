@@ -63,7 +63,7 @@ class SyncableTable<T> {
     }
     throw StateError(
       'Cannot determine entity id for kind "$kind". '
-      'Provide getId: (e) => e.id (recommended).',
+          'Provide getId: (e) => e.id (recommended).',
     );
   }
 
@@ -84,7 +84,7 @@ class SyncableTable<T> {
     }
     throw StateError(
       'Cannot determine entity updatedAt for kind "$kind". '
-      'Provide getUpdatedAt: (e) => e.updatedAt (recommended).',
+          'Provide getUpdatedAt: (e) => e.updatedAt (recommended).',
     );
   }
 }

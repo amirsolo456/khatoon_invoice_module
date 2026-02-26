@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
 // import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:invoice_module/index.dart';
-
 
 // Note: For printing functionalitlutter, you would typically use the 'pdf' and 'printing' packages.
 // Add them to your pubspec.yaml:
@@ -96,9 +94,11 @@ class _InvoicePageState extends State<InvoiceView> {
   PartyInfo seller = PartyInfo();
   PartyInfo buyer = PartyInfo();
 
-  late List<InvoiceItemsModel> items = [];
+  List<InvoiceItemsModel> items = [];
 
   final double taxRate = 0.09;
+  double totalPrice = 0;
+  double totalPQuantity = 0;
 
   double get subTotal => items.fold<double>(
     0,
@@ -115,8 +115,8 @@ class _InvoicePageState extends State<InvoiceView> {
   double v = 0.0;
 
   final intl.NumberFormat currencyFormat = intl.NumberFormat("#,##0", "fa_IR");
-  late List<TextEditingController> _qtyControllers;
-  late List<TextEditingController> _priceControllers;
+  final List<TextEditingController> _qtyControllers = [];
+  final List<TextEditingController> _priceControllers = [];
 
   @override
   void initState() {
@@ -128,9 +128,7 @@ class _InvoicePageState extends State<InvoiceView> {
       final inv = widget.initialInvoice;
       seller = PartyInfo();
       buyer = PartyInfo(partyId: inv.partyId);
-      items = inv.items.map((line) {
-        return line;
-            }).toList();
+      items = inv.items.map((line) => line).toList();
     } else {
       seller = PartyInfo();
       buyer = PartyInfo();
@@ -141,23 +139,21 @@ class _InvoicePageState extends State<InvoiceView> {
   @override
   void dispose() {
     // ✅ تمام controllers را آزاد کنید
-    for (var controller in _qtyControllers.reversed ) {
+    for (final controller in _qtyControllers.reversed) {
       controller.dispose();
     }
-    for (var controller in _priceControllers.reversed) {
+    for (final controller in _priceControllers.reversed) {
       controller.dispose();
     }
     super.dispose();
   }
 
-
-
   void _initializeControllers() {
-  _qtyControllers.clear();
-  _priceControllers.clear();
+    _qtyControllers.clear();
+    _priceControllers.clear();
 
     for (int i = 0; i < items.length; i++) {
-  _qtyControllers[i] = TextEditingController(
+      _qtyControllers[i] = TextEditingController(
         text: items[i].quantity.toString(),
       );
       _priceControllers[i] = TextEditingController(
@@ -166,16 +162,31 @@ class _InvoicePageState extends State<InvoiceView> {
     }
   }
 
-  InvoiceItemsModel _createNewItem() {
-    return InvoiceItemsModel(productId: null, description: '');
-  }
+  InvoiceItemsModel _createNewItem() => InvoiceItemsModel(
+    productId: null,
+    id: 0,
+    invoiceId: 0,
+    quantity: 0,
+    unitPrice: 0,
+    lineTotal: 0,
+    updatedAt: DateTime.now(),
+  );
 
   void _addItem() {
-  setState(() {
-  items.add(InvoiceItemsModel());
-  _qtyControllers.add(TextEditingController(text: '1'));
-  _priceControllers.add(TextEditingController(text: '0'));
-  });
+    setState(() {
+      items.add(
+        InvoiceItemsModel(
+          id: 0,
+          invoiceId: 0,
+          quantity: 0,
+          unitPrice: 0,
+          lineTotal: 0,
+          updatedAt: DateTime.now(),
+        ).copyWith(),
+      );
+      _qtyControllers.add(TextEditingController(text: '1'));
+      _priceControllers.add(TextEditingController(text: '0'));
+    });
   }
 
   void _removeItem(int index) {
@@ -242,108 +253,117 @@ class _InvoicePageState extends State<InvoiceView> {
     if (selectedProduct != null) {
       setState(() {
         // ✅ تعیین صحیح بدون async
-        items[index].pId = selectedProduct.id;
-        items[index].productName = selectedProduct.name;
-        items[index].price = selectedProduct.price;
+        // items[index].pId = selectedProduct.id;
+        // items[index].productName = selectedProduct.name;
+        // items[index].price = selectedProduct.price;
       });
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('فاکتور فروش'),
-        backgroundColor: Colors.blueAccent,
-        foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.print),
-            onPressed: _printInvoice,
-            tooltip: 'چاپ',
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      title: const Text('فاکتور فروش'),
+      backgroundColor: Colors.blueAccent,
+      foregroundColor: Colors.white,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.print),
+          onPressed: _printInvoice,
+          tooltip: 'چاپ',
+        ),
+        IconButton(
+          icon: const Icon(Icons.save),
+          onPressed: () async {
+            await widget.onSelect(widget.initialInvoice);
+          },
+          tooltip: 'ذخیره',
+        ),
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: _resetInvoice,
+          tooltip: 'جدید',
+        ),
+      ],
+    ),
+    body: SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          // Party Info Sections
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: PartyInfoCard(title: 'مشخصات فروشنده', info: seller),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: PartyInfoCard(title: 'مشخصات خریدار', info: buyer),
+              ),
+            ],
           ),
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () async {
-              await widget.onSelect(widget.initialInvoice);
-            },
-            tooltip: 'ذخیره',
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _resetInvoice,
-            tooltip: 'جدید',
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Party Info Sections
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: PartyInfoCard(title: 'مشخصات فروشنده', info: seller),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: PartyInfoCard(title: 'مشخصات خریدار', info: buyer),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
+          const SizedBox(height: 24),
 
-            // Items Table
-            Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'اقلام فاکتور',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+          // Items Table
+          Card(
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'اقلام فاکتور',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child:
-                      DataTable(
-                        columnSpacing: 20,
-                        columns: const [
-                          DataColumn(label: Text('#')),
-                          DataColumn(label: Text('شرح کالا')),
-                          DataColumn(label: Text('تعداد')),
-                          DataColumn(label: Text('مبلغ واحد (ریال)')),
-                          DataColumn(label: Text('مبلغ کل (ریال)')),
-                          DataColumn(label: Text('حذف')),
-                        ],
-                        rows: List.generate(items.length, (index) {
-                          final item = items[index];
-                          return DataRow(cells: [
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      columnSpacing: 20,
+                      columns: const [
+                        DataColumn(label: Text('#')),
+                        DataColumn(label: Text('شرح کالا')),
+                        DataColumn(label: Text('تعداد')),
+                        DataColumn(label: Text('مبلغ واحد (ریال)')),
+                        DataColumn(label: Text('مبلغ کل (ریال)')),
+                        DataColumn(label: Text('حذف')),
+                      ],
+                      rows: List.generate(items.length, (index) {
+                        final item = items[index];
+                        return DataRow(
+                          cells: [
                             DataCell(Text('${index + 1}')),
                             DataCell(
                               InkWell(
                                 onTap: () => _openProductSelection(index),
                                 child: Container(
-                                  constraints: const BoxConstraints(minWidth: 180),
-                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 180,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 8,
+                                  ),
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey.shade300),
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
+                                    ),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
                                     item.description ?? item.productName ?? '',
                                     style: TextStyle(
-                                      color: item.productName == 'انتخاب کالا...' ? Colors.grey : Colors.black87,
+                                      color:
+                                          item.productName == 'انتخاب کالا...'
+                                          ? Colors.grey
+                                          : Colors.black87,
                                     ),
                                   ),
                                 ),
@@ -355,17 +375,26 @@ class _InvoicePageState extends State<InvoiceView> {
                                 width: 70,
                                 child: TextFormField(
                                   controller: _qtyControllers[index],
-                                  keyboardType: const TextInputType.numberWithOptions(decimal: false),
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: false,
+                                      ),
                                   textAlign: TextAlign.center,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 8,
+                                    ),
                                   ),
                                   onChanged: (val) {
                                     final parsed = int.tryParse(val);
-                                    if (parsed != null && parsed != item.quantity) {
+                                    if (parsed != null &&
+                                        parsed != item.quantity) {
                                       setState(() {
-                                        item.quan = parsed.clamp(1, 999999) as double; // محدود کردن منطقی
+                                        totalPQuantity =
+                                            parsed.clamp(1, 999999)
+                                                as double; // محدود کردن منطقی
                                       });
                                     }
                                   },
@@ -378,19 +407,28 @@ class _InvoicePageState extends State<InvoiceView> {
                                 width: 130,
                                 child: TextFormField(
                                   controller: _priceControllers[index],
-                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
                                   textAlign: TextAlign.end,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     suffixText: ' ریال',
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 8,
+                                    ),
                                   ),
                                   onChanged: (val) {
-                                    final cleanVal = val.replaceAll(',', '').replaceAll('٬', '');
+                                    final cleanVal = val
+                                        .replaceAll(',', '')
+                                        .replaceAll('٬', '');
                                     final parsed = double.tryParse(cleanVal);
-                                    if (parsed != null && parsed != item.unitPrice) {
+                                    if (parsed != null &&
+                                        parsed != item.unitPrice) {
                                       setState(() {
-                                        item.price = parsed < 0 ? 0 : parsed;
+                                        totalPrice = parsed < 0 ? 0 : parsed;
                                       });
                                     }
                                   },
@@ -400,96 +438,99 @@ class _InvoicePageState extends State<InvoiceView> {
                             // مبلغ کل ردیف (به‌روز می‌شود)
                             DataCell(
                               Text(
-                                currencyFormat.format(item.total),
+                                currencyFormat.format(totalPQuantity),
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  color: item.total > 0 ? Colors.blueGrey[900] : Colors.grey,
+                                  color: totalPQuantity > 0
+                                      ? Colors.blueGrey[900]
+                                      : Colors.grey,
                                 ),
                               ),
                             ),
                             DataCell(
                               IconButton(
-                                icon: const Icon(Icons.delete, color: Colors.red),
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
                                 onPressed: () => _removeItem(index),
                               ),
                             ),
-                          ]);
-                        }),
-                      )
+                          ],
+                        );
+                      }),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton.icon(
-                          onPressed: _addItem,
-                          icon: const Icon(Icons.add),
-                          label: const Text('افزودن سطر جدید'),
-                        ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton.icon(
+                        onPressed: _addItem,
+                        icon: const Icon(Icons.add),
+                        label: const Text('افزودن سطر جدید'),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 24),
+          ),
+          const SizedBox(height: 24),
 
-            // Totals
-            Card(
-              color: Colors.blue.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    _buildSummaryRow('جمع کل:', subTotal),
-                    _buildSummaryRow('مالیات و عوارض (9%):', taxAmount),
-                    const Divider(thickness: 1.5),
-                    _buildSummaryRow(
-                      'مبلغ قابل پرداخت:',
-                      grandTotal,
-                      isBold: true,
-                      fontSize: 18,
-                    ),
-                  ],
-                ),
+          // Totals
+          Card(
+            color: Colors.blue.shade50,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildSummaryRow('جمع کل:', subTotal),
+                  _buildSummaryRow('مالیات و عوارض (9%):', taxAmount),
+                  const Divider(thickness: 1.5),
+                  _buildSummaryRow(
+                    'مبلغ قابل پرداخت:',
+                    grandTotal,
+                    isBold: true,
+                    fontSize: 18,
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
 
   Widget _buildSummaryRow(
     String label,
     double amount, {
     bool isBold = false,
     double fontSize = 14,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-              fontSize: fontSize,
-            ),
+  }) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            fontSize: fontSize,
           ),
-          Text(
-            '${currencyFormat.format(amount)} ریال',
-            style: TextStyle(
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-              fontSize: fontSize,
-              fontFamily: 'Courier',
-            ), // Monospaced if available
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+        Text(
+          '${currencyFormat.format(amount)} ریال',
+          style: TextStyle(
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            fontSize: fontSize,
+            fontFamily: 'Courier',
+          ), // Monospaced if available
+        ),
+      ],
+    ),
+  );
 }
 
 class PartyInfoCard extends StatelessWidget {
@@ -499,41 +540,37 @@ class PartyInfoCard extends StatelessWidget {
   const PartyInfoCard({super.key, required this.title, required this.info});
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const Divider(),
-            _buildTextField('نام', (val) => info.name = val),
-            _buildTextField('کد ملی', (val) => info.nationalId = val),
-            _buildTextField('تلفن', (val) => info.phone = val),
-            _buildTextField('آدرس', (val) => info.address = val),
-          ],
-        ),
+  Widget build(BuildContext context) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          const Divider(),
+          _buildTextField('نام', (val) => info.name = val),
+          _buildTextField('کد ملی', (val) => info.nationalId = val),
+          _buildTextField('تلفن', (val) => info.phone = val),
+          _buildTextField('آدرس', (val) => info.address = val),
+        ],
       ),
-    );
-  }
+    ),
+  );
 
-  Widget _buildTextField(String label, Function(String) onChanged) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: label,
-          isDense: true,
-          border: const OutlineInputBorder(),
-        ),
-        onChanged: onChanged,
+  Widget _buildTextField(String label, Function(String) onChanged) => Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: TextFormField(
+      decoration: InputDecoration(
+        labelText: label,
+        isDense: true,
+        border: const OutlineInputBorder(),
       ),
-    );
-  }
+      onChanged: onChanged,
+    ),
+  );
 }
 
 class ProductSelectionDialog extends StatefulWidget {

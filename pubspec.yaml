@@ -3,6 +3,7 @@ description: "A new Flutter project."
 publish_to: none
 
 
+
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
@@ -23,16 +24,19 @@ environment:
   sdk: ">=3.11.0 <4.0.0"
   flutter: ">=1.17.0"
 
+
 dependencies:
   flutter:
     sdk: flutter
-  drift: ^2.27.0
+
   drift_flutter: ^0.2.4
   sqlite3_flutter_libs: ^0.5.41
   path_provider: ^2.1.5
   offline_first_sync_drift: ^0.1.2
   offline_first_sync_drift_rest: ^0.1.2
-  json_annotation: ^4.9.0
+  drift: ^2.26.1
+  json_annotation: ^4.8.0
+
   uuid: ^4.5.2
   provider: ^6.1.5+1
   http: ^1.2.0
@@ -44,16 +48,21 @@ dependencies:
   syncfusion_flutter_datagrid: ^32.1.21
   khatoon_shared:
     path: ../../khatoon_shared
-  build_runner: ^2.11.1
+
   persian_fonts: ^1.0.6
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  integration_test:
+    sdk: flutter
+
+  drift_dev: ^2.26.1
+  build_runner: ^2.4.15
+  json_serializable: ^6.7.0
+  test: ^1.25.15
+  mocktail: ^1.0.4
   flutter_lints: ^6.0.0
 
-  drift_dev: ^2.27.0
-  json_serializable: ^6.9.4
-  mocktail: ^1.0.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

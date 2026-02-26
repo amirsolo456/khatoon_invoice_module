@@ -1,37 +1,40 @@
-import 'package:drift/drift.dart';
-import 'package:drift/native.dart'; // یا use SqliteExecutor for platform specific
-import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
+
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
+import 'package:drift/native.dart';
+import 'package:drift/drift.dart';
+import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
+import 'package:path/path.dart' as p;
+import '../../model/invoice_items_model.dart';
+import '../../model/invoice_model.dart';
+import '../../model/party_model.dart';
+import '../../model/payments_model.dart';
+import 'package:drift_flutter/drift_flutter.dart';
+// ✅ اضافه کنید این خط
 
-import '../../../index.dart';
-import '../table/invoice_items.dart';
-import '../table/invoices.dart';
 
-import '../table/payments.dart';
-import 'data_base.drift.dart';
+part 'data_base.g.dart';
+
+// باقی imports شما...
 
 @DriftDatabase(
-  tables: [Invoices, InvoiceItems, Payments, Parties],
-  daos: [InvoiceDao, InvoiceItemsDao, PaymentsDao, PartiesDao],
+  include: {'package:offline_first_sync_drift/src/sync_tables.drift'},
+  tables: [
+    Invoices,
+    InvoiceItems,
+    Parties,
+    Payments,
+
+  ],
 )
-final class AppDatabase extends $AppDatabase with SyncDatabaseMixin{
+class AppDatabase extends _$AppDatabase  with SyncDatabaseMixin {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
-  factory AppDatabase.open() {
-    final dir = Directory
-        .current; // تغییر بدی به مسیر مناسب یا از path_provider استفاده کن
-    final file = File((dir.path, 'apsqlite').toString());
-    return AppDatabase(NativeDatabase(file));
-  }
-
+  /// Open the database in a file.
   static QueryExecutor _openConnection() {
-    // گزینه‌ای مینیمال، اگر helper سفارشی داری آن را جایگزین کن
-    return LazyDatabase(() async {
-      final dbFolder = await getApplicationDocumentsDirectory();
-      final file = File((dbFolder.path, 'invoice_db.sqlite').toString());
-      return NativeDatabase(file);
-    });
+    return driftDatabase(name: 'todo_advanced');
+  }
+  static AppDatabase open({String name = 'todo_advanced'}) {
+    return AppDatabase(driftDatabase(name: name));
   }
 
   @override
@@ -39,8 +42,13 @@ final class AppDatabase extends $AppDatabase with SyncDatabaseMixin{
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-    onCreate: (m) async {
+    onCreate: (Migrator m) async {
       await m.createAll();
     },
+    onUpgrade: (Migrator m, int from, int to) async {
+      // migration logic
+    },
   );
+
+// ... باقی کد
 }

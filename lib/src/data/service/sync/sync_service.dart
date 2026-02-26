@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:invoice_module/src/data/table/invoices.dart';
+import 'package:invoice_module/src/data/db/data_base.dart' show AppDatabase;
 import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
 import 'package:offline_first_sync_drift_rest/offline_first_sync_drift_rest.dart';
 
-import '../../db/data_base.dart' show AppDatabase;
-
+import '../../../model/invoice_model.dart';
 
 String _sanitizeError(Object error) {
   final message = error.toString();
@@ -42,15 +41,13 @@ class SyncService extends ChangeNotifier {
     http.Client? httpClient,
     int maxRetries = 5,
     int maxPushRetries = 5,
-  })  : _baseUri = Uri.parse(baseUrl),
-        _httpClient = httpClient ?? http.Client() {
-
+  }) : _baseUri = Uri.parse(baseUrl),
+       _httpClient = httpClient ?? http.Client() {
     final config = SyncConfig(
       conflictStrategy: ConflictStrategy.autoPreserve,
       pageSize: 500,
       maxPushRetries: maxPushRetries,
       maxConflictRetries: 5,
- 
     );
 
     _engine = createRestSyncEngine<AppDatabase>(
@@ -62,7 +59,6 @@ class SyncService extends ChangeNotifier {
       client: _httpClient,
       maxRetries: maxRetries,
     );
-
   }
 
   final Uri _baseUri;
@@ -73,27 +69,33 @@ class SyncService extends ChangeNotifier {
   final Duration pushDebounce;
 
   late final SyncEngine<AppDatabase> _engine;
+
   // late final SyncCoordinator _coordinator;
   late final StreamSubscription<SyncEvent> _subscription;
 
   SyncEngine<AppDatabase> get engine => _engine;
 
   SyncStatus _status = SyncStatus.idle;
+
   SyncStatus get status => _status;
 
   String? _error;
+
   String? get error => _error;
 
   SyncStats? _lastStats;
+
   SyncStats? get lastStats => _lastStats;
 
   // SyncRunResult? _lastRun;
   // SyncRunResult? get lastRun => _lastRun;
 
   double _progress = 0.0;
+
   double get progress => _progress;
 
   bool get isSyncing => _status == SyncStatus.syncing;
+
   Stream<SyncEvent> get events => _engine.events;
 
   // Stream<int> get pendingCountStream => _engine.watchPendingPushCount();
@@ -146,7 +148,6 @@ class SyncService extends ChangeNotifier {
   //   return ops.length;
   // }
 
-
   @override
   void dispose() {
     _subscription.cancel();
@@ -157,13 +158,7 @@ class SyncService extends ChangeNotifier {
   }
 }
 
-enum SyncStatus {
-  idle,
-  syncing,
-  error,
-}
-
-
+enum SyncStatus { idle, syncing, error }
 
 /// One-liner helper that creates [RestTransport] and [SyncEngine] together.
 SyncEngine<DB> createRestSyncEngine<DB extends GeneratedDatabase>({

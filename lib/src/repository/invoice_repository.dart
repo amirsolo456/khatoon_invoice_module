@@ -1,6 +1,5 @@
-/*
 import 'package:drift/drift.dart';
-import 'package:khatoon_shared/index.dart';
+import 'package:invoice_module/src/repository/mapers.dart';
 import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
 import 'package:uuid/uuid.dart';
 
@@ -9,7 +8,7 @@ import '../model/invoice_model.dart';
 
 class InvoiceModelRepository {
   InvoiceModelRepository(this._db, syncTable)
-    : _writer = SyncWriter< AppDatabase>(_db).forTable(syncTable);
+    : _writer = SyncWriter<AppDatabase>(_db).forTable(syncTable);
 
   final AppDatabase _db;
   final _uuid = const Uuid();
@@ -19,15 +18,22 @@ class InvoiceModelRepository {
     return (_db.select(_db.invoices)
           ..where(
             ($InvoicesTable t) =>
-                t.title.isNull() & t.deletedAtLocal.isNull(),
+                t. notes.isNull() & t.deletedAtLocal.isNull(),
           )
           ..orderBy([
-            (t) => OrderingTerm(expression: t.priority),
-            (t) => OrderingTerm(expression: t.title),
+
+            (t) => OrderingTerm(expression: t.notes),
           ]))
         .watch();
   }
+  Future<InvoiceModel?> getInvoiceById(String id) async {
+    final query = _db.select(_db.invoices)..where((tbl) => tbl.id.equals(id));
+    final row = await query.getSingleOrNull();
 
+    if (row == null) return null;
+
+    return row.toInvoiceModel();   // ← اینجا از extension استفاده می‌شه
+  }
   // Future<List<InvoiceModel>> getAll() {
   //   return (_db.select(_db.invoice)
   //     ..where((t) => t.deletedAt.isNull() & t.deletedAtLocal.isNull())
@@ -43,33 +49,39 @@ class InvoiceModelRepository {
   // }
 
   Future<InvoiceModel> create({
-    required String title,
-    String? description,
+    required String invoiceNo,
+    required String type,
+    required double totalAmount,
+    required String status,
+    int? partyId,
+    String? notes,
     bool completed = false,
-    int priority = 3,
-    DateTime? dueDate,
+    int? mood,
+    int? energy,
   }) async {
     final now = DateTime.now().toUtc();
-    final id = _uuid.v4().hashCode;
-    final validPriority = priority.clamp(1, 5);
+    final id = _uuid.v4(); // id از نوع String
 
-    final invoiceModel = InvoiceModel(
+    final invoice = InvoiceModel(
       id: id,
-
+      invoiceNo: invoiceNo,
+      type: type,
+      totalAmount: totalAmount,
+      status: status,
+      partyId: partyId,
+      notes: notes,
+      completed: completed,
+      mood: mood,
+      energy: energy,
+      version: 1,
+      createdAt: now,
       updatedAt: now,
-      invoiceNo: '',
-      type: '',
-      totalAmount: 0,
-      status: '',
-      version: 0,
-      isDeleted: false,
-      createdAt: DateTime.now(),
+     
     );
 
-    await _writer.insertAndEnqueue(invoiceModel, localTimestamp: now);
-    return invoiceModel;
+    await _writer.insertAndEnqueue(invoice, localTimestamp: now);
+    return invoice;
   }
-
   Future<InvoiceModel> update(
     InvoiceModel invoiceModel, {
     String? title,
@@ -83,9 +95,9 @@ class InvoiceModelRepository {
 
     final updated = invoiceModel.copyWith(
       status: title ?? invoiceModel.status,
-      description: description,
+    
       completed: completed ?? invoiceModel.completed,
-      dueDate: dueDate,
+     
       updatedAt: now,
     );
 
@@ -93,8 +105,8 @@ class InvoiceModelRepository {
       updated,
 
       // changedFields:  Value(DateTime.now().microsecond).value,
-      baseUpdatedAt: invoiceModel.updatedAt,
-      localTimestamp: now,
+   
+      localTimestamp: now, baseUpdatedAt:   DateTime.now(),
     );
 
     return updated;
@@ -131,7 +143,7 @@ class InvoiceModelRepository {
   }
 
   Future<void> hardDeleteFromServer(int id) async {
-    await (_db.delete(_db.invoices)..where((t) => t.id.equals(id))).go();
+    await (_db.delete(_db.invoices)..where((t) => t.id.equals(id.toString()))).go();
   }
 
   Future<List<int>> getDeletedIds() async {
@@ -140,7 +152,7 @@ class InvoiceModelRepository {
               (t) => t.deletedAt.isNotNull() | t.deletedAtLocal.isNotNull(),
             ))
             .get();
-    return rows.map((t) => t.id).toList();
+    return rows.map((t) => (((t.id) as num).toInt())).toList();
   }
 
   Future<InvoiceModel> createWithId(InvoiceModel invoiceModel) async {
@@ -150,4 +162,3 @@ class InvoiceModelRepository {
     return invoiceModelWithTime;
   }
 }
-*/
