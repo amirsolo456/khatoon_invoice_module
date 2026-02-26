@@ -1,9 +1,6 @@
 
-import 'dart:io';
-import 'package:drift/native.dart';
 import 'package:drift/drift.dart';
 import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
-import 'package:path/path.dart' as p;
 import '../../model/invoice_items_model.dart';
 import '../../model/invoice_model.dart';
 import '../../model/party_model.dart';

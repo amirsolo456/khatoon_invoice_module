@@ -91,7 +91,7 @@ class InvoiceModelRepository {
     DateTime? dueDate,
   }) async {
     final now = DateTime.now().toUtc();
-    final validPriority = priority?.clamp(1, 5);
+    priority?.clamp(1, 5);
 
     final updated = invoiceModel.copyWith(
       status: title ?? invoiceModel.status,
@@ -124,7 +124,7 @@ class InvoiceModelRepository {
         await _db.update(_db.invoices).replace(deleted.toInsertable());
       },
       id: invoiceModel.id.toString(),
-      baseUpdatedAt: invoiceModel.updatedAt ?? DateTime.now(),
+      baseUpdatedAt: invoiceModel.updatedAt,
       localTimestamp: now,
     );
   }

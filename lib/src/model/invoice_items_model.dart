@@ -10,6 +10,7 @@ part 'invoice_items_model.g.dart';
 
 /// Simple model without inheritance (بدون ارث‌بری)
 @json.JsonSerializable(fieldRename: json.FieldRename.snake)
+// ignore: must_be_immutable
 class InvoiceItemsModel extends Equatable {
   final int id;
   final int invoiceId;

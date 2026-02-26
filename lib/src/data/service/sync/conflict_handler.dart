@@ -10,13 +10,8 @@ import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
 // import 'package:offline_first_sync_drift/src/syncable_table.dart';
 // import 'package:offline_first_sync_drift/src/transport_adapter.dart';
 
-/// Result of conflict resolution.
-///
-
-import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
 
 
 

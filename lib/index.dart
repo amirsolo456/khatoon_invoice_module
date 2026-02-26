@@ -10,5 +10,8 @@ export 'package:invoice_module/src/data/service/sync/invoice_sync.dart';
 export 'package:invoice_module/src/data/service/sync/conflict_handler.dart';
 export 'package:invoice_module/src/ui/invoice_view.dart';
 export 'package:invoice_module/src/repository/invoice_repository.dart';
+export 'package:invoice_module/src/repository/payment_repository.dart';
+export 'package:invoice_module/src/repository/party_repository.dart';
+export 'package:invoice_module/src/repository/invoice_item_repository.dart';
 export 'package:invoice_module/src/syncable_table.dart';
 

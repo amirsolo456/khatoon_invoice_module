@@ -8,6 +8,7 @@ import '../utils/base_model.dart';
 part 'invoice_model.g.dart';
 
 @json.JsonSerializable(fieldRename: json.FieldRename.snake)
+// ignore: must_be_immutable
 class InvoiceModel extends BaseModel {
   final String invoiceNo;
   final String type;

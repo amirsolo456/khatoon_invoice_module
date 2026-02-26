@@ -48,31 +48,61 @@ class PaymentsModel extends BaseModel {
       _$PaymentsModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$PaymentsModelToJson(this);
-
-  @override
-  BaseModel copyWith({
-    id,
+  PaymentsModel copyWith({
+    String? id,
+    String? invoiceId,
+    double? amount,
+    String? direction,
+    String? paymentMethod,
+    String? fromPartyId,
+    String? toPartyId,
+    String? reference,
+    String? notes,
+    int? version,
     DateTime? updatedAt,
     DateTime? deletedAt,
     DateTime? deletedAtLocal,
-    DateTime? createdAt,
   }) {
     return PaymentsModel(
       id: id ?? this.id,
-      invoiceId: invoiceId,
-      amount: amount,
-      direction: direction,
+      invoiceId: invoiceId ?? this.invoiceId,
+      amount: amount ?? this.amount,
+      direction: direction ?? this.direction,
       paymentMethod: paymentMethod ?? this.paymentMethod,
       fromPartyId: fromPartyId ?? this.fromPartyId,
       toPartyId: toPartyId ?? this.toPartyId,
       reference: reference ?? this.reference,
       notes: notes ?? this.notes,
+      version: version ?? this.version,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
       deletedAtLocal: deletedAtLocal ?? this.deletedAtLocal,
-      version: version ?? this.version,
     );
   }
+  // @override
+  // BaseModel copyWith({
+  //   id,
+  //   DateTime? updatedAt,
+  //   DateTime? deletedAt,
+  //   DateTime? deletedAtLocal,
+  //   DateTime? createdAt,
+  // }) {
+  //   return PaymentsModel(
+  //     id: id ?? this.id,
+  //     invoiceId: invoiceId,
+  //     amount: amount,
+  //     direction: direction,
+  //     paymentMethod: paymentMethod ?? this.paymentMethod,
+  //     fromPartyId: fromPartyId ?? this.fromPartyId,
+  //     toPartyId: toPartyId ?? this.toPartyId,
+  //     reference: reference ?? this.reference,
+  //     notes: notes ?? this.notes,
+  //     updatedAt: updatedAt ?? this.updatedAt,
+  //     deletedAt: deletedAt ?? this.deletedAt,
+  //     deletedAtLocal: deletedAtLocal ?? this.deletedAtLocal,
+  //     version: version ?? this.version,
+  //   );
+  // }
 }
 
 @d.UseRowClass(PaymentsModel, generateInsertable: true)
