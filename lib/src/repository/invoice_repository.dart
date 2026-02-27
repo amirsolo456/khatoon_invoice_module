@@ -90,7 +90,7 @@ class InvoiceModelRepository {
       for (final item in items) {
         await itemRepo.create(
 
-          invoiceId: item.id,
+          invoiceId: id.toString(),
           productId: item.productId,
           quantity: item.quantity,
           unitPrice: item.unitPrice,
@@ -101,6 +101,7 @@ class InvoiceModelRepository {
           sellerEmployeeId: item.sellerEmployeeId,
         );
       }
+
       print('اقلام ذخیره شدند: ${items.length} مورد');
     }
 

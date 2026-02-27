@@ -13,7 +13,7 @@ part 'invoice_items_model.g.dart';
 // ignore: must_be_immutable
 class InvoiceItemsModel extends Equatable {
   final int id;
-  final int invoiceId;
+  final String invoiceId;
   final int? productId;
   final String? description;
   final String? productName;
@@ -61,7 +61,7 @@ class InvoiceItemsModel extends Equatable {
 
   InvoiceItemsModel copyWith({
     int? id,
-    int? invoiceId,
+    String? invoiceId,
     int? productId,
     String? description,
     String? productName,

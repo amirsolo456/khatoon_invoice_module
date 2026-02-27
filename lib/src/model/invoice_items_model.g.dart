@@ -9,7 +9,7 @@ part of 'invoice_items_model.dart';
 InvoiceItemsModel _$InvoiceItemsModelFromJson(Map<String, dynamic> json) =>
     InvoiceItemsModel(
       id: (json['id'] as num).toInt(),
-      invoiceId: (json['invoice_id'] as num).toInt(),
+      invoiceId:  json['invoice_id'] as String,
       quantity: (json['quantity'] as num).toDouble(),
       unitPrice: (json['unit_price'] as num).toDouble(),
       lineTotal: (json['line_total'] as num).toDouble(),
