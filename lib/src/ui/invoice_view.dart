@@ -140,7 +140,7 @@ class InvoicePageState extends State<InvoiceView> {
   InvoiceItemsModel _createNewItem() {
     return InvoiceItemsModel(
       id: 0,
-      invoiceId: 0,
+      invoiceId:'0',
       productId: null,
 
       quantity: 1.0,
@@ -487,6 +487,8 @@ class InvoicePageState extends State<InvoiceView> {
                 ),
               ),
             ),
+
+            _buildFooterActions()
           ],
         ),
       ),
@@ -685,6 +687,7 @@ class _ProductSelectionDialogState extends State<ProductSelectionDialog> {
                 },
               ),
             ),
+
           ],
         ),
       ),
@@ -866,4 +869,56 @@ class Button extends StatelessWidget {
       ),
     );
   }
+}
+Widget _buildFooterActions() {
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.grey.shade100,
+      border: const Border(top: BorderSide(color: Color(0xFFe5e7eb))),
+    ),
+    child: Row(
+      children: [
+        ElevatedButton.icon(
+          onPressed: () {
+            // عملیات ذخیره
+          },
+          icon: const Icon(Icons.save, size: 18),
+          label: const Text('ذخیره فاکتور'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF155dfc),
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          ),
+        ),
+        const SizedBox(width: 8),
+        OutlinedButton.icon(
+          onPressed: () {
+            // عملیات چاپ
+          },
+          icon: const Icon(Icons.print, size: 18),
+          label: const Text('چاپ'),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: const Color(0xFF364153),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          ),
+        ),
+        const SizedBox(width: 8),
+        OutlinedButton.icon(
+          onPressed: () {
+            // عملیات لغو
+          },
+          icon: const Icon(Icons.close, size: 18),
+          label: const Text('لغو'),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: const Color(0xFF364153),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          ),
+        ),
+      ],
+    ),
+  );
 }
