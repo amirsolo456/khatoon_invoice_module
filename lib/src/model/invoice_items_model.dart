@@ -130,7 +130,7 @@ class InvoiceItemsModel extends Equatable {
 @df.UseRowClass(InvoiceItemsModel, generateInsertable: true)
 class InvoiceItems extends df.Table with SyncColumns {
   df.IntColumn get id => integer()();
-  df.IntColumn get invoiceId => integer().references(Invoices, #id)();
+  df.TextColumn get invoiceId => text().references(Invoices, #id)();  // ← text() به جای integer()
   df.IntColumn get productId => integer().nullable()();
   df.TextColumn get description => text().nullable()();
   df.RealColumn get quantity => real()();

@@ -4,7 +4,9 @@ import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
 import 'package:uuid/uuid.dart';
 
 import '../data/db/data_base.dart';
+import '../model/invoice_items_model.dart';
 import '../model/invoice_model.dart';
+import 'invoice_item_repository.dart';
 
 class InvoiceModelRepository {
   InvoiceModelRepository(this._db, syncTable)
@@ -47,20 +49,21 @@ class InvoiceModelRepository {
   // Future<InvoiceModel?> getById(int id) async {
   //   return (_db.select(_db.inv)..where((t) => t. == id)).getSingleOrNull();
   // }
-
   Future<InvoiceModel> create({
     required String invoiceNo,
     required String type,
     required double totalAmount,
     required String status,
+    required InvoiceItemsRepository itemRepo,
     int? partyId,
     String? notes,
     bool completed = false,
     int? mood,
     int? energy,
+    required List<InvoiceItemsModel> items,  // ← لیست اقلام رو اجباری کن
   }) async {
     final now = DateTime.now().toUtc();
-    final id = _uuid.v4(); // id از نوع String
+    final id = const Uuid().v4();
 
     final invoice = InvoiceModel(
       id: id,
@@ -76,12 +79,77 @@ class InvoiceModelRepository {
       version: 1,
       createdAt: now,
       updatedAt: now,
-     
     );
 
+    // مرحله ۱: درج فاکتور اصلی
     await _writer.insertAndEnqueue(invoice, localTimestamp: now);
+
+    // مرحله ۲: درج اقلام (اگر وجود دارن)
+    if (items.isNotEmpty) {
+
+      for (final item in items) {
+        await itemRepo.create(
+
+          invoiceId: item.id,
+          productId: item.productId,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          lineTotal: item.lineTotal,
+          description: item.description,
+          productName: item.productName,
+          partyId: item.partyId,
+          sellerEmployeeId: item.sellerEmployeeId,
+        );
+      }
+      print('اقلام ذخیره شدند: ${items.length} مورد');
+    }
+
     return invoice;
   }
+  // Future<InvoiceModel> create({
+  //   required String invoiceNo,
+  //   required String type,
+  //   required double totalAmount,
+  //   required String status,
+  //   int? partyId,
+  //   String? notes,
+  //   bool completed = false,
+  //   int? mood,
+  //   int? energy,
+  // }) async {
+  //   final now = DateTime.now().toUtc();
+  //   final id = _uuid.v4(); // id از نوع String
+  //
+  //   final invoice = InvoiceModel(
+  //     id: id,
+  //     invoiceNo: invoiceNo,
+  //     type: type,
+  //     totalAmount: totalAmount,
+  //     status: status,
+  //     partyId: partyId,
+  //     notes: notes,
+  //     completed: completed,
+  //     mood: mood,
+  //     energy: energy,
+  //     version: 1,
+  //     createdAt: now,
+  //     updatedAt: now,
+  //
+  //   );
+  //   // final companion = invoice.toCompanion();
+  //   // final createdRow = await _db.into(_db.invoices).insertReturning(companion);
+  //   // final created = createdRow.toInvoiceModel();
+  //   // // ذخیره اقلام
+  //   // for (final item in invoice.items) {
+  //   //   await sl<InvoiceItemsRepository>().create(
+  //   //     invoiceId: created.id!,
+  //   //     // بقیه فیلدهای item
+  //   //   );
+  //   // }
+  //   await _writer.insertAndEnqueue(invoice, localTimestamp: now);
+  //   return invoice;
+  // }
+
   Future<InvoiceModel> update(
     InvoiceModel invoiceModel, {
     String? title,

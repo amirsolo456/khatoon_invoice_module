@@ -14,4 +14,4 @@ export 'package:invoice_module/src/repository/payment_repository.dart';
 export 'package:invoice_module/src/repository/party_repository.dart';
 export 'package:invoice_module/src/repository/invoice_item_repository.dart';
 export 'package:invoice_module/src/syncable_table.dart';
-
+export 'package:invoice_module/src/ui/prerson/party_info.dart';

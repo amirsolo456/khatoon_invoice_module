@@ -7,8 +7,6 @@ import 'package:invoice_module/src/data/db/data_base.dart' show AppDatabase;
 import 'package:offline_first_sync_drift/offline_first_sync_drift.dart';
 import 'package:offline_first_sync_drift_rest/offline_first_sync_drift_rest.dart';
 
-import '../../../model/invoice_model.dart';
-
 String _sanitizeError(Object error) {
   final message = error.toString();
   if (message.contains('SocketException')) {
@@ -33,7 +31,7 @@ class SyncService extends ChangeNotifier {
   SyncService({
     required AppDatabase db,
     required String baseUrl,
-    required SyncableTable<Invoices> todoSync,
+    required List<SyncableTable> todoSync,
     this.pushOnOutboxChanges = true,
     this.pullOnStartup = true,
     this.autoInterval = const Duration(minutes: 5),
@@ -50,15 +48,17 @@ class SyncService extends ChangeNotifier {
       maxConflictRetries: 5,
     );
 
-    _engine = createRestSyncEngine<AppDatabase>(
-      db: db,
-      base: _baseUri,
-      token: () async => '',
-      tables: [todoSync],
-      config: config,
-      client: _httpClient,
-      maxRetries: maxRetries,
-    );
+    for (int i = 0; 0 < todoSync.length; i++) {
+      _engine = createRestSyncEngine<AppDatabase>(
+        db: db,
+        base: _baseUri,
+        token: () async => '',
+        tables: [todoSync[i]],
+        config: config,
+        client: _httpClient,
+        maxRetries: maxRetries,
+      );
+    }
   }
 
   final Uri _baseUri;
